@@ -1,0 +1,13 @@
+/* Body Styling */
+body{
+    background: white
+}
+/* Global Hero Section Styling */
+.hero {
+    background: linear-gradient(to right, #d8bfd8, #e6e6fa); /* Color gradient */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    min-height: 100vh; /* Full viewport height */
+    text-align: center; /* Center text */
+}

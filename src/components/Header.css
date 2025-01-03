@@ -1,0 +1,20 @@
+/* Header Styling...*/
+
+header{
+    
+    background-color: white;
+}
+header .logo{
+    font-family: 'Quickstand', seins-serif;
+    font-weight: bold;
+    font-size: larger;
+}
+header .btn{
+    font-family: 'Trend';
+    font-size: medium;
+}
+header .header-btn a:hover,
+header .header-btn a:active{
+    background-color: #f9dcdc; /* Hover/active background color */
+    color: #d8bfd8; /* Change text color on hover */
+}

@@ -1,0 +1,84 @@
+/* Footer Styling */
+footer {
+    background-color: white;
+}
+
+/* Updated Button Styles */
+footer .footer-button {
+    text-align: center;
+}
+
+footer .footer-button a {
+    display: inline-block; /* Ensures buttons behave like block elements for styling */
+    text-align: center;
+    padding: 10px 20px; /* Add consistent padding */
+    margin: 5px 0; /* Add spacing between buttons */
+    width: auto; /* Adjust width to fit content */
+    color: black; /* Default button text color */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover transition */
+    font-family: 'Quickstand', sans-serif;
+    font-size: medium;
+}
+
+footer .footer-button a:hover,
+footer .footer-button a:active {
+    background-color: #f9dcdc; /* Hover/active background color */
+    color: #d8bfd8; /* Change text color on hover */
+}
+
+/* Footer Logo */
+footer .footer-logo {
+    font-family: 'Quickstand', sans-serif;
+    font-size: larger;
+}
+
+/* Footer Paragraphs */
+footer p {
+    font-family: 'Quickstand', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+}
+
+footer .address-above {
+    margin-top: 20%;
+    margin-bottom: 0;
+}
+
+/* Form Styling */
+footer .footer-form {
+    padding: 20px;
+    border-radius: 8px;
+}
+
+footer .footer-form input,
+footer .footer-form textarea {
+    background-color: #d8bfd8;
+    border: none;
+    border-radius: 5px;
+}
+
+footer .footer-form input:focus,
+footer .footer-form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+footer .footer-form button {
+    background-color: #f9dcdc;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+footer .footer-form button:hover {
+    background-color: #f2bcbc;
+}
+
+/* Footer Heading */
+footer h1 {
+    font-family: 'Quickstand', sans-serif;
+    font-size: x-large;
+    text-align: center;
+    margin-bottom: 10%;
+}
