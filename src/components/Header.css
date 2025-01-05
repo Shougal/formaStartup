@@ -7,6 +7,7 @@ header{
     background-color: white;
     
 }
+/* Main header parent */
 header .header-root{
     /* header and container inside are same height and width */
     width: 100%;
@@ -16,7 +17,7 @@ header .logo{
     font-weight: bold;
     font-size: larger;
 }
-
+/* Deepest child in tree. Child of header-block-child class*/
 /*TODO: change position/space between buttons */
 header .btn{
     font-family: 'Trend';
@@ -28,14 +29,19 @@ header .header-btn a:active{
     background-color: #f9dcdc; /* Hover/active background color */
     color: #d8bfd8; /* Change text color on hover */
 }
+
+/* First child/div of header root */
 .header-block{
     
     width:100%;
+    /* I had extra spacing ,making the header area have extra height.
+    To resolve, zeroed the padding and margin */
     padding: 0%;
     margin-top: 0;
     margin-bottom: 0;
 
 }
+
 .header-block-child{
     width: 100%;
 }
