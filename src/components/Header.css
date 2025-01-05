@@ -47,6 +47,11 @@ header .header-btn a:active{
 }
 
 /* login icon section */
+.dropdown-wrapper {
+    position: relative; /* Keep dropdown aligned with the icon and to
+    make sure you can scroll to dropdown menu */
+}
+
 
 /* This is the className of this header icon div inside header btn parent */
 .login-icon {
