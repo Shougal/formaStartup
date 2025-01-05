@@ -26,7 +26,7 @@ function Header() {
 
             {/* Login Icon */}
             <div
-              className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0"
+              className=" dropdown-wrapper btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0"
               onMouseEnter={() => {
                 setShowDropdown(true);
                 console.log("Dropdown visibility:", true);
