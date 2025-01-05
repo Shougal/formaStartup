@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState }  from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
 
 function Header() {
+    const [showDropdown, setShowDropdown] = useState(false);
   return (
     <header className="header-root">
       <div className="header-block container-fluid ">
@@ -24,6 +25,34 @@ function Header() {
 
 
             {/* Login Icon */}
+            <div
+              className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0"
+              onMouseEnter={() => {
+                setShowDropdown(true);
+                console.log("Dropdown visibility:", true);
+              }}
+              onMouseLeave={() => {
+                setShowDropdown(false);
+                console.log("Dropdown visibility:", false);
+              }}
+            >
+              <i className="login icon"><FontAwesomeIcon icon={faUser} /></i>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <Link to="/login" className="dropdown-item">
+                    Login
+                  </Link>
+                  <Link to="/register" className="dropdown-item">
+                    Join as Customer
+                  </Link>
+                  <Link to="/register-provider" className="dropdown-item">
+                    Join as Service Provider
+                  </Link>
+                </div>
+              )}
+            </div>
+            
+
             
             
 
