@@ -21,10 +21,14 @@ function Login() {
       alert("Login successful!");
       navigate("/");
     } catch (err) {
+        //Remove console later
+        console.error("Error Code:", err.code); // Log the exact error code
+        console.error("Error Message:", err.message);
+
       if (err.code === "auth/user-not-found") {
         setError("No account found with this email. Please register.");
       } else if (err.code === "auth/wrong-password") {
-        setError("Incorrect password. Please try again.");
+        setError("Incorrect password or email. Please try again.");
       } else if (err.code === "auth/invalid-email") {
         setError("Invalid email format. Please check and try again.");
       } else if (err.code === "auth/account-exists-with-different-credential") {
