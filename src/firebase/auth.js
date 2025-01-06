@@ -62,6 +62,7 @@ export const sendVerificationEmail = async (user) => {
     try {
       await sendEmailVerification(user);
       alert("Verification email sent! Please check your inbox.");
+      console.log("Verification email sent to:", user.email);
     } catch (error) {
       console.error("Error sending verification email:", error.message);
       throw error;
