@@ -26,7 +26,9 @@ function App() {
         <Route path="/nail-stylist" element={<NailStylist />} />
         <Route path="/about" element={<About />} />
         <Route path="/join-us" element={<JoinUs />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/RegisterCustomer" element={<RegisterCustomer />} />
+        <Route path="/RegisterProvider" element={<RegisterProvider />} />
       </Routes>
     </main>
     <Footer />
