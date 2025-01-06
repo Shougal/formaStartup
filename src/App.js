@@ -7,7 +7,6 @@ import Photographer from "./pages/Photographer";
 import Barber from "./pages/Barber";
 import NailStylist from "./pages/NailStylist";
 import About from "./pages/About";
-import JoinUs from "./pages/JoinUs";
 import Login from "./pages/Login";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import RegisterProvider from "./pages/RegisterProvider";
@@ -25,7 +24,6 @@ function App() {
         <Route path="/barber" element={<Barber />} />
         <Route path="/nail-stylist" element={<NailStylist />} />
         <Route path="/about" element={<About />} />
-        <Route path="/join-us" element={<JoinUs />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/RegisterCustomer" element={<RegisterCustomer />} />
         <Route path="/RegisterProvider" element={<RegisterProvider />} />
