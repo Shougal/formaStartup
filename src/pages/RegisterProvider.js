@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { auth, db } from "../firebase/firebaseConfig";
+import { auth, db } from "../firebase/firebaseConfig"; // Import auth and db from your Firebase config
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -12,16 +12,18 @@ function RegisterProvider() {
   const [price, setPrice] = useState("");
   const [availability, setAvailability] = useState("");
   const [portfolio, setPortfolio] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Save provider data to Firestore
+      // Save provider-specific data in Firestore
       await setDoc(doc(db, "providers", user.uid), {
         username,
         email,
@@ -29,10 +31,12 @@ function RegisterProvider() {
         price,
         availability,
         portfolio,
+        imageUrl,
         createdAt: new Date(),
       });
 
-      navigate("/Login"); // Redirect to the home page
+      alert("Provider registered successfully!");
+      navigate("/"); // Redirect to home page
     } catch (err) {
       setError("Failed to create account. Please try again.");
     }
@@ -88,6 +92,13 @@ function RegisterProvider() {
           placeholder="Portfolio Link"
           value={portfolio}
           onChange={(e) => setPortfolio(e.target.value)}
+          required
+        />
+        <input
+          type="url"
+          placeholder="Image URL"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
           required
         />
         <button type="submit">Register</button>
