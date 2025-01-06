@@ -1,0 +1,106 @@
+/* Shared Page Styles */
+.page-container {
+    min-height: calc(100vh - 120px); /* Adjust for header and footer height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #d8bfd8, #e6e6fa); /* Same as your hero section */
+    padding: 40px 20px;
+}
+
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    font-family: 'Quickstand', sans-serif;
+}
+
+.form-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Quickstand', sans-serif;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #d8bfd8;
+    box-shadow: 0 0 5px rgba(216, 191, 216, 0.5);
+}
+
+.form-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d8bfd8;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Trend', sans-serif;
+}
+
+.form-button:hover {
+    background-color: #c2a3c2;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.secondary-button {
+    background-color: white;
+    color: #d8bfd8;
+    border: 2px solid #d8bfd8;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.secondary-button:hover {
+    background-color: #f9dcdc;
+    color: #d8bfd8;
+}
+
+/* Mobile Friendly Adjustments */
+@media screen and (max-width: 480px) {
+    .form-container {
+        padding: 20px;
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+    }
+
+    .form-button {
+        font-size: 0.9rem;
+    }
+}
