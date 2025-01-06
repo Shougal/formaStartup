@@ -9,6 +9,8 @@ import NailStylist from "./pages/NailStylist";
 import About from "./pages/About";
 import JoinUs from "./pages/JoinUs";
 import Login from "./pages/Login";
+import RegisterCustomer from "./pages/RegisterCustomer";
+import RegisterProvider from "./pages/RegisterProvider";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
 
