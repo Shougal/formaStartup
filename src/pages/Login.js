@@ -3,6 +3,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import { signInWithGoogle } from "../firebase/auth"; // Your Google login logic
 import { useNavigate } from "react-router-dom";
+import { sendVerificationEmail } from "../firebase/auth"; // Adjust the path as needed
+
 import "./pages.css";
 
 function Login() {
