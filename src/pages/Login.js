@@ -17,9 +17,22 @@ function Login() {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
-      navigate("/");
+      // Sign in the user
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Check if the user's email is verified
+    if (!user.emailVerified) {
+      setError("Please verify your email before logging in.");
+      // Optional: Resend verification email
+      await sendVerificationEmail(user);
+      alert("A new verification email has been sent to your inbox.");
+      return;
+    }
+
+    // Proceed to the app
+    alert("Login successful!");
+    navigate("/");
     } catch (err) {
         //Remove console later
         console.error("Error Code:", err.code); // Log the exact error code
