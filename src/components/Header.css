@@ -13,16 +13,17 @@ header .header-root{
     width: 100%;
 }
 header .logo{
-    font-family: 'Quickstand', seins-serif;
+    font-family: 'Quickstand', sans-serif;
     font-weight: bold;
     font-size: larger;
 }
 /* Deepest child in tree. Child of header-block-child class*/
 /*TODO: change position/space between buttons */
 header .btn{
-    font-family: 'Trend';
+    font-family: 'Trend',sans-serif;
     font-size: medium;
     width: 100%;
+    
 }
 header .header-btn a:hover,
 header .header-btn a:active{
@@ -47,39 +48,38 @@ header .header-btn a:active{
 }
 
 /* login icon section */
+
+/* This is the className of the login section div */
 .dropdown-wrapper {
     position: relative; /* Keep dropdown aligned with the icon and to
     make sure you can scroll to dropdown menu */
+    background-color: black;
+    color: black;
 }
 
 
-/* This is the className of this header icon div inside header btn parent */
+
 .login-icon {
     width: 100%;
     justify-content: center;
     text-align: center;
     margin: auto;
+    
   } 
   
   
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 1000;
-  }
   
   .dropdown-item {
-    padding: 10px 20px;
-    text-decoration: none;
-    color: black;
+    margin-bottom: 5%;
+    font-family: 'Trend',sans-serif;
+    font-size: medium;
+    width: 100%;
+    display: block;
   }
   
   .dropdown-item:hover {
-    background-color: #f0f0f0;
+    background-color: #f9dcdc; /* Hover/active background color */
+    color: #d8bfd8; /* Change text color on hover */
   }
   .dropdown-menu {
     border: 1px solid red; /* Temporary debugging border */
@@ -95,6 +95,31 @@ header .header-btn a:active{
     padding: 10px; /* Add some padding for spacing */
     z-index: 1000; /* Make sure it appears above other elements */
   } 
+
+  /* For screens smaller than 768px (tablets and mobile) */
+@media screen and (max-width: 768px) {
+    .header-btn {
+      flex-direction: column; /* Stack buttons vertically */
+      align-items: center; /* Center align the stacked buttons */
+    }
+  
+    .header-btn .btn {
+      width: 90%; /* Make buttons take up most of the screen width */
+      font-size: small; /* Reduce font size for smaller screens */
+    }
+  }
+  
+  /* For screens smaller than 480px (small mobile devices) */
+  @media screen and (max-width: 480px) {
+    .header-btn {
+      gap: 5px; /* Reduce spacing between buttons */
+    }
+  
+    .header-btn .btn {
+      font-size: smaller; /* Further reduce font size */
+    }
+  }
+  
   
   
 
