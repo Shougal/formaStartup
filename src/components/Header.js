@@ -11,7 +11,7 @@ function Header() {
       <div className="header-block container-fluid ">
         <div className=" header-block-child row align-items-center">
           <div className="col-3 d-flex align-items-center">
-            <img src="/FormaLogo.jpeg" alt="Logo" className="img-fluid me-2" style={{ height: "60px" }} />
+            <img src="/FormaLogo.jpeg" alt="Logo" className="forma-logo img-fluid me-2" style={{ height: "60px" }} />
             <span className="h5 mb-0 logo">FORMA</span>
           </div>
           <div className="header-btn col-9 d-flex justify-content-center">
