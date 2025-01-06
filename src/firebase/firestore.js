@@ -1,6 +1,9 @@
 import { db } from "./firebaseConfig";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
+
+//TODO: Should I write to database collection upon registration??
+
 // Add a New Customer
 export const addCustomer = async (customerData) => {
   return addDoc(collection(db, "customers"), customerData);
