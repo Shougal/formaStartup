@@ -25,6 +25,12 @@ header .btn{
     width: 100%;
     
 }
+/* This is the logo in the header. Added padding to the left of the logo
+to ensure visibility. Added margin-top to ensure full visibility */
+.forma-logo{
+    margin-top: 2%;
+    padding-left: 5%;
+}
 header .header-btn a:hover,
 header .header-btn a:active{
     background-color: #f9dcdc; /* Hover/active background color */
@@ -82,18 +88,14 @@ header .header-btn a:active{
     color: #d8bfd8; /* Change text color on hover */
   }
   .dropdown-menu {
-    border: 1px solid red; /* Temporary debugging border */
-    background-color: yellow; /* Debugging background */
-    border: 1px solid red; /* Debugging border */
     display: block; /* Ensure the dropdown is visible when rendered */
     position: absolute;
     top: 100%; /* Place the dropdown right below the login icon */
     right: 0; /* Align it to the right of the parent container */
     background-color: white; /* Dropdown background color */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for visibility */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 25px; /* Rounded corners */
     padding: 10px; /* Add some padding for spacing */
-    z-index: 1000; /* Make sure it appears above other elements */
+   
   } 
 
   /* For screens smaller than 768px (tablets and mobile) */
