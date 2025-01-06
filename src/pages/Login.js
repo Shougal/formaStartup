@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
+import { signInWithGoogle } from "../firebase/auth"; // Import Google login logic
 import { useNavigate } from "react-router-dom";
 import "./pages.css";
 
@@ -10,16 +11,16 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Handle email/password login
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevents form submission from reloading the page
-    setError("");  // Clears previous error messages
+    e.preventDefault();
+    setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);  // Firebase sign-in
+      await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
-      navigate("/"); // Navigating to Home page upon successfull login
+      navigate("/");
     } catch (err) {
-        // Handling various Firebase authentication errors
       if (err.code === "auth/user-not-found") {
         setError("No account found with this email. Please register.");
       } else if (err.code === "auth/wrong-password") {
@@ -32,18 +33,31 @@ function Login() {
     }
   };
 
+  // Handle Google login
+  const handleGoogleLogin = async () => {
+    setError("");
+
+    try {
+      await signInWithGoogle();
+      alert("Google login successful!");
+      navigate("/");
+    } catch (err) {
+      setError("Google login failed. Please try again later.");
+    }
+  };
+
   return (
     <div className="page-container">
       <div className="form-container">
         <h1 className="form-title">Login</h1>
-        {error && <p className="error-message">{error}</p>} {/* Displays error messages */}
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email</label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Updates email state
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -52,12 +66,15 @@ function Login() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Updates password state
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <button type="submit" className="form-button">Login</button>
         </form>
+        <button onClick={handleGoogleLogin} className="google-login-button">
+          Sign in with Google
+        </button>
       </div>
     </div>
   );
