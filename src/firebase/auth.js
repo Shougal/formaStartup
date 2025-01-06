@@ -6,6 +6,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
 } from "firebase/auth";
+import { sendEmailVerification } from "firebase/auth";
 
 // Sign Up with Email and Password
 export const signUpWithEmail = async (email, password) => {
@@ -51,3 +52,13 @@ export const signInWithGoogle = async () => {
         throw error;
     }
 };
+
+export const sendVerificationEmail = async (user) => {
+    try {
+      await sendEmailVerification(user);
+      alert("Verification email sent! Please check your inbox.");
+    } catch (error) {
+      console.error("Error sending verification email:", error.message);
+      throw error;
+    }
+  };
