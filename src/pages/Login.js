@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
-import { signInWithGoogle } from "../firebase/auth"; // Import Google login logic
+import { signInWithGoogle } from "../firebase/auth"; // Your Google login logic
 import { useNavigate } from "react-router-dom";
 import "./pages.css";
 
@@ -27,6 +27,10 @@ function Login() {
         setError("Incorrect password. Please try again.");
       } else if (err.code === "auth/invalid-email") {
         setError("Invalid email format. Please check and try again.");
+      } else if (err.code === "auth/account-exists-with-different-credential") {
+        setError(
+          "This account was created using Google. Please log in using Google."
+        );
       } else {
         setError("Login failed. Please try again later.");
       }
@@ -42,7 +46,13 @@ function Login() {
       alert("Google login successful!");
       navigate("/");
     } catch (err) {
-      setError("Google login failed. Please try again later.");
+      if (err.code === "auth/popup-closed-by-user") {
+        setError("Google login popup was closed. Please try again.");
+      } else if (err.code === "auth/network-request-failed") {
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        setError("Google login failed. Please try again later.");
+      }
     }
   };
 
@@ -50,7 +60,7 @@ function Login() {
     <div className="page-container">
       <div className="form-container">
         <h1 className="form-title">Login</h1>
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>} {/* Display errors */}
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email</label>
@@ -70,7 +80,9 @@ function Login() {
               required
             />
           </div>
-          <button type="submit" className="form-button">Login</button>
+          <button type="submit" className="form-button">
+            Login
+          </button>
         </form>
         <button onClick={handleGoogleLogin} className="google-login-button">
           Sign in with Google
