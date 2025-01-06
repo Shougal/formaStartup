@@ -11,13 +11,18 @@ import { sendEmailVerification } from "firebase/auth";
 // Sign Up with Email and Password
 export const signUpWithEmail = async (email, password) => {
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        return userCredential.user; // Return the user object
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // Send verification email
+      await sendEmailVerification(user);
+      alert("Verification email sent! Please check your inbox.");
+      return user;
     } catch (error) {
-        console.error("Sign-Up Error:", error.code, error.message);
-        throw error; // Rethrow the error for further handling in the UI
+      console.error("Sign-Up Error:", error.message);
+      throw error;
     }
-};
+  };
 
 // Log In with Email and Password
 export const logInWithEmail = async (email, password) => {
