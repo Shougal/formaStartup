@@ -7,6 +7,7 @@ import {
     signInWithPopup,
 } from "firebase/auth";
 import { sendEmailVerification } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 // Sign Up with Email and Password
 export const signUpWithEmail = async (email, password) => {
@@ -66,5 +67,14 @@ export const sendVerificationEmail = async (user) => {
     } catch (error) {
       console.error("Error sending verification email:", error.message);
       throw error;
+    }
+  };
+  export const sendPasswordReset = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset email sent! Please check your inbox.");
+    } catch (error) {
+      console.error("Error sending password reset email:", error.message);
+      throw error; // Propagate the error to handle it in the UI
     }
   };
