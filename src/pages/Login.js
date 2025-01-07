@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
-import { signInWithGoogle } from "../firebase/auth"; // Your Google login logic
+import { signInWithGoogle, sendPasswordReset } from "../firebase/auth"; // Google login logic
 import { useNavigate } from "react-router-dom";
-import { sendVerificationEmail } from "../firebase/auth"; // Adjust the path as needed
+import { sendVerificationEmail } from "../firebase/auth"; 
 
 import "./pages.css";
 
@@ -11,6 +11,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const navigate = useNavigate();
 
   // Handle email/password login
@@ -75,6 +76,25 @@ function Login() {
     }
   };
 
+  // Handle password reset
+  const handlePasswordReset = async () => {
+    try {
+      await sendPasswordReset(email);
+      setResetEmailSent(true);
+      alert("Password reset email sent! Please check your inbox.");
+    } catch (err) {
+      console.error("Error sending password reset email:", err.message);
+
+      if (err.code === "auth/user-not-found") {
+        setError("No account found with this email.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Invalid email format. Please check and try again.");
+      } else {
+        setError("Failed to send password reset email. Please try again later.");
+      }
+    }
+  };
+
   return (
     <div className="page-container">
       <div className="form-container">
@@ -106,6 +126,10 @@ function Login() {
         <button onClick={handleGoogleLogin} className="google-login-button">
           Sign in with Google
         </button>
+        <button onClick={handlePasswordReset} className="reset-button">
+          Forgot Password?
+        </button>
+        {resetEmailSent && <p>Check your inbox for password reset instructions.</p>}
       </div>
     </div>
   );
