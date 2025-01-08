@@ -56,7 +56,7 @@ function RegisterCustomer() {
   const googleProvider = new GoogleAuthProvider();
 
   /**************************************************************************
-   * 2) useEffect: CLEAN UP UNVERIFIED USER IF PAGE REFRESHED
+    2) useEffect: CLEAN UP UNVERIFIED USER IF PAGE REFRESHED
    *************************************************************************/
   useEffect(() => {
     const regInProgress = localStorage.getItem("registrationInProgress");
@@ -83,7 +83,7 @@ function RegisterCustomer() {
   }, []);
 
   /**************************************************************************
-   * 3) useEffect: TIMER LOGIC
+   3) useEffect: TIMER LOGIC
    *************************************************************************/
   useEffect(() => {
     let interval;
@@ -100,7 +100,7 @@ function RegisterCustomer() {
   }, [isRegistering, timer]);
 
   /**************************************************************************
-   * 4) ENABLE RESEND AFTER 1 MIN
+   4) ENABLE RESEND AFTER 1 MIN
    *************************************************************************/
   useEffect(() => {
     // Timer starts at 240. After 60s, timer=180 => 1 minute passed
@@ -110,7 +110,7 @@ function RegisterCustomer() {
   }, [isRegistering, timer]);
 
   /**************************************************************************
-   * 5) HELPER: Check if Email Already Exists
+   5) HELPER: Check if Email Already Exists
    *************************************************************************/
   const checkEmailExists = async (email) => {
     // 5a) Check in Auth
@@ -119,7 +119,7 @@ function RegisterCustomer() {
       return true; // Email is already in use in Firebase Auth
     }
 
-    // 5b) Optional - Check Firestore "customers" collection
+    // 5b) Check Firestore "customers" collection
     const q = query(collection(db, "customers"), where("email", "==", email));
     const querySnap = await getDocs(q);
     if (!querySnap.empty) {
@@ -130,7 +130,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 6) HELPER: Validate Password
+   6) HELPER: Validate Password
    *************************************************************************/
   const validatePassword = () => {
     if (password !== confirmPassword) {
@@ -152,7 +152,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 7) HELPER: Reauthenticate if needed
+   7) HELPER: Reauthenticate if needed
    *************************************************************************/
   const reauthenticateUser = async (user, pwd) => {
     if (!pwd) {
@@ -171,7 +171,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 8) REGISTER
+   8) REGISTER
    *************************************************************************/
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -220,7 +220,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 9) POLL FOR VERIFICATION
+   9) POLL FOR VERIFICATION
    *************************************************************************/
   const pollForVerification = (user) => {
     let canceled = false;
@@ -258,7 +258,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 10) TIMEOUT => DELETE UNVERIFIED USER
+   10) TIMEOUT => DELETE UNVERIFIED USER
    *************************************************************************/
   const handleTimeout = async () => {
     setIsRegistering(false);
@@ -296,7 +296,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 11) CANCEL => DELETE USER
+   11) CANCEL => DELETE USER
    *************************************************************************/
   const handleCancel = async () => {
     setIsCanceled(true);
@@ -327,7 +327,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 11b) HELPER: RESET REGISTRATION FLOW
+   11b) HELPER: RESET REGISTRATION FLOW
    *************************************************************************/
   const resetRegistration = (msg) => {
     // Generic helper if you want to clean up user state
@@ -339,7 +339,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 12) RESEND VERIFICATION
+    12) RESEND VERIFICATION
    *************************************************************************/
   const handleResendVerification = async () => {
     try {
@@ -361,7 +361,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 13) GOOGLE SIGNUP (OPTIONAL)
+    13) GOOGLE SIGNUP (OPTIONAL)
    *************************************************************************/
   const handleGoogleSignup = async () => {
     try {
@@ -385,7 +385,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 14) SET PASSWORD IF USER SIGNED UP WITH GOOGLE
+    14) SET PASSWORD IF USER SIGNED UP WITH GOOGLE
    *************************************************************************/
   const handleSetPassword = async (e) => {
     e.preventDefault();
@@ -424,7 +424,7 @@ function RegisterCustomer() {
   };
 
   /**************************************************************************
-   * 15) RENDER
+    15) RENDER
    *************************************************************************/
   return (
     <div className="container mt-5">
