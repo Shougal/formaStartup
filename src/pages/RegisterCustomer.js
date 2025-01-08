@@ -205,15 +205,26 @@ function RegisterCustomer() {
     setTimer(0);
     setError("Verification time expired. Please register again.");
     const user = auth.currentUser;
+  
     if (user) {
+      console.log("Timeout reached. Attempting to delete user:", user);
+  
       try {
-        await deleteUser(user);
-        console.log("Unverified user deleted after timeout.");
+        await deleteUser(user); // Attempt to delete the user
+        console.log("Unverified user successfully deleted after timeout.");
       } catch (err) {
         console.error("Failed to delete user after timeout:", err.message);
+  
+        if (err.code === "auth/requires-recent-login") {
+          console.warn("User token expired. Unable to delete unverified user.");
+          // Optionally, force the user to reauthenticate here
+        }
       }
+    } else {
+      console.warn("No current user found during timeout deletion.");
     }
   };
+  
 
   const handleCancel = async () => {
     setIsCanceled(true); // Mark as canceled
