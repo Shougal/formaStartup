@@ -20,15 +20,16 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import "./Customers.css";
 
 function RegisterCustomer() {
   /**************************************************************************
-   * 1) STATE HOOKS
+   1) STATE HOOKS
    *************************************************************************/
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
-  // We'll store password in state so we can reauth if needed
+  // store password in state so we can reauth if needed
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -426,155 +427,165 @@ function RegisterCustomer() {
   /**************************************************************************
     15) RENDER
    *************************************************************************/
-  return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <h1 className="text-center mb-4">Join as Customer</h1>
+    return (
+        <main>
+            <section className="hero">
+            <div className="container mt-5 register-container">
+        <div className="row justify-content-center">
+            <div className="col-lg-6 col-md-8 col-sm-10">
+                <h1 className="text-center mb-4 register-title">Join as Customer</h1>
+                
+                {/* Error & Success UI */}
+                {error && <div className="alert alert-danger">{error}</div>}
+                {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                
+                {/* If googleUser is null, show standard signup */}
+                {!googleUser ? (
+                    <form onSubmit={handleRegister} className="register-form">
+                        {/* USERNAME */}
+                        <div className="mb-3">
+                            <label className="form-label">Username</label>
+                            <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            />
+                            
+                        </div>
+                        
+                        {/* EMAIL */}
+                        <div className="mb-3">
+                            <label className="form-label">Email</label>
+                            <input
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                             />
+                        </div>
 
-          {/* Error & success UI */}
-          {error && <div className="alert alert-danger">{error}</div>}
-          {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                         {/* PASSWORD */}
+                         <div className="mb-3">
+                            <label className="form-label">Password</label>
+                            <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            disabled={isRegistering}
+                            />
+                        </div>
 
-          {/* If googleUser is null, show standard signup */}
-          {!googleUser ? (
-            <form onSubmit={handleRegister}>
-              {/* USERNAME */}
-              <div className="mb-3">
-                <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
+                          {/* CONFIRM PASSWORD */}
+                        <div className="mb-3">
+                            <label className="form-label">Confirm Password</label>
+                            <input
+                            type="password"
+                            className="form-control"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            disabled={isRegistering}
+                            />
+                        </div>
 
-              {/* EMAIL */}
-              <div className="mb-3">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+                    {/* REGISTER BUTTON */}
+                    <button
+                    type="submit"
+                    className="btn register-button w-100"
+                    disabled={isRegistering}
+                    >
+                    Register
+                    </button>
 
-              {/* PASSWORD */}
-              <div className="mb-3">
-                <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isRegistering}
-                />
-              </div>
-
-              {/* CONFIRM PASSWORD */}
-              <div className="mb-3">
-                <label className="form-label">Confirm Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={isRegistering}
-                />
-              </div>
-
-              {/* REGISTER BUTTON */}
-              <button
-                type="submit"
-                className="btn btn-primary w-100"
-                disabled={isRegistering}
-              >
-                Register
-              </button>
-
-              {/* OPTIONAL: Google Sign-up Button */}
-              <button
-                type="button"
-                className="btn btn-danger w-100 mt-3"
-                onClick={handleGoogleSignup}
-              >
-                Sign Up with Google
-              </button>
-            </form>
-          ) : (
-            /* If googleUser is set, show "Set Password" form */
-            <form onSubmit={handleSetPassword}>
-              <div className="mb-3">
-                <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder={googleUser.displayName || "Enter your username"}
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Set Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Confirm Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-primary w-100">Set Password</button>
-            </form>
-          )}
-
-          {/* If we're in the "registering" phase, show timer/resend/cancel UI */}
-          {isRegistering && (
-            <div>
-              <p className="text-center mt-3">
-                Verification email sent! Please verify your email.
-              </p>
-              <p className="text-center">
-                Time remaining: {Math.floor(timer / 60)}:
-                {String(timer % 60).padStart(2, "0")}
-              </p>
-
-              <button
-                className="btn btn-warning w-100"
-                onClick={handleResendVerification}
-                disabled={resendDisabled}
-              >
-                Resend Verification Email
-              </button>
-
-              <button
-                className="btn btn-secondary w-100 mt-3"
-                onClick={handleCancel}
-              >
-                Cancel Registration
-              </button>
+                    {/* Google Sign-up Button */}
+                    <button
+                    type="button"
+                    className="btn google-button w-100 mt-3"
+                    onClick={handleGoogleSignup}
+                    >
+                    Sign Up with Google
+                    </button>
+                    </form>
+                    ) : (
+                        
+                        /* If googleUser is set, show "Set Password" form */
+                        <form onSubmit={handleSetPassword} className="register-form">
+                            <div className="mb-3">
+                                <label className="form-label">Username</label>
+                                <input
+                                type="text"
+                                className="form-control"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder={googleUser.displayName || "Enter your username"}
+                                />
+                            </div>
+                            
+                            <div className="mb-3">
+                                <label className="form-label">Set Password</label>
+                                <input
+                                type="password"
+                                className="form-control"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                />
+                                
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Confirm Password</label>
+                                <input
+                                type="password"
+                                className="form-control"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                />
+                                </div>
+                                
+                                <button type="submit" className="btn register-button w-100">Set Password</button>
+                        </form>
+                    )}
+                    
+                    
+                    {/* If we're in the "registering" phase, show timer/resend/cancel UI */}
+                    
+                    {isRegistering && (
+                        <div className="mt-3">
+                            <p className="text-center">
+                                Verification email sent! Please verify your email.
+                            </p>
+                            <p className="text-center">
+                                    Time remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
+                            </p>
+                            <button
+                            className="btn resend-button w-100"
+                            onClick={handleResendVerification}
+                            disabled={resendDisabled}
+                            >
+                                Resend Verification Email
+                            </button>
+                            
+                            <button
+                            className="btn cancel-button w-100 mt-3"
+                            onClick={handleCancel}
+                            >
+                                Cancel Registration
+                            </button>
+                        </div>
+                    )}
             </div>
-          )}
         </div>
-      </div>
     </div>
-  );
+            </section>
+        </main>
+    
+        );
 }
 
 export default RegisterCustomer;
