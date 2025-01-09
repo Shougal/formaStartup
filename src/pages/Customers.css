@@ -1,0 +1,83 @@
+.register-container {
+    padding-top: 100px; /* Adjust for fixed header */
+    padding-bottom: 50px;
+  }
+  
+  .register-title {
+    font-family: 'Quickstand', sans-serif;
+    font-size: 2rem;
+    color: black;
+  }
+  
+  .register-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-label {
+    font-family: 'Quickstand', sans-serif;
+    color: black;
+    font-size: 1rem;
+  }
+  
+  .register-button {
+    font-family: 'Trend', sans-serif;
+    background-color: #d8bfd8;
+    color: white;
+    border: 2px solid #d8bfd8;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .register-button:hover {
+    background-color: white;
+    color: #d8bfd8;
+    border: 2px solid #d8bfd8;
+  }
+  
+  .google-button {
+    font-family: 'Trend', sans-serif;
+    background-color: #f9dcdc;
+    color: white;
+    border: 2px solid #f9dcdc;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .google-button:hover {
+    background-color: white;
+    color: #f9dcdc;
+    border: 2px solid #f9dcdc;
+  }
+  
+  .resend-button,
+  .cancel-button {
+    font-family: 'Trend', sans-serif;
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .cancel-button {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .register-container {
+      padding-top: 120px;
+      padding-bottom: 30px;
+    }
+  
+    .register-form {
+      padding: 15px;
+    }
+  
+    .register-title {
+      font-size: 1.5rem;
+    }
+  }
+  
