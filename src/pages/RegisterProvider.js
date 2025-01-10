@@ -76,11 +76,11 @@ function RegisterProvider() {
         console.log("Page refreshed mid-registration. Attempting to delete user.");
         deleteUser(user)
           .then(() => {
-            console.log("Unverified user deleted on page mount.");
+            console.log("Unverified user deleted.");
           })
           .catch((err) => {
             // If deletion fails, just log it and reset
-            console.error("Failed to delete user on mount:", err.code, err.message);
+            console.error("Failed to delete user:", err.code, err.message);
           })
           .finally(() => {
             localStorage.removeItem("registrationInProgress");
@@ -129,9 +129,16 @@ function RegisterProvider() {
       return true; // Email is already in use in Firebase Auth
     }
 
-    // 5b) Check Firestore "customers" collection
+    // 5b) Check Firestore "customers" and "providers" collection
     const q = query(collection(db, "providers"), where("email", "==", email));
     const querySnap = await getDocs(q);
+    if (!querySnap.empty) {
+      // There's a doc with that email
+      return true;
+    }
+
+    const q2 = query(collection(db, "customers"), where("email", "==", email));
+    const querySnap2 = await getDocs(q2);
     if (!querySnap.empty) {
       // There's a doc with that email
       return true;
@@ -214,10 +221,10 @@ function RegisterProvider() {
       }
     
       // Validate image
-      if (!imageUrl) {
-        setError("Please upload an image.");
-        return;
-      }
+    //   if (!imageUrl) {
+    //     setError("Please upload an image.");
+    //     return;
+    //   }
     
       // Validate availability
       if (availability.length === 0) {
@@ -465,10 +472,11 @@ function RegisterProvider() {
       const credential = EmailAuthProvider.credential(googleUser.email, password);
       await linkWithCredential(googleUser, credential);
 
-      await setDoc(doc(db, "customers", googleUser.uid), {
+      await setDoc(doc(db, "providers", googleUser.uid), {
         username: username || googleUser.displayName,
         email: googleUser.email,
         createdAt: new Date(),
+       
       });
 
       alert("Account linked successfully! You can now log in with email and password.");
@@ -487,41 +495,41 @@ function RegisterProvider() {
     15) Handle Image storage
    *************************************************************************/
   
-    const storage = getStorage();
+    // const storage = getStorage();
     
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            setError("Please select an image file.");
-            return;
-        }
+    // const handleImageUpload = (e) => {
+    //     const file = e.target.files[0];
+    //     if (!file) {
+    //         setError("Please select an image file.");
+    //         return;
+    //     }
         
-        const storageRef = ref(storage, `customer-images/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
+    //     const storageRef = ref(storage, `customer-images/${file.name}`);
+    //     const uploadTask = uploadBytesResumable(storageRef, file);
         
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-                console.error("Image upload failed:", error.message);
-                setError("Failed to upload image. Please try again.");
-            },
-            async () => {
-                // Upload completed successfully
-                try {
-                    const url = await getDownloadURL(uploadTask.snapshot.ref);
-                    setImageUrl(url);
-                    console.log("Image uploaded successfully. URL:", url);
-                } catch (err) {
-                    console.error("Failed to get download URL:", err.message);
-                    setError("Failed to get image URL. Please try again.");
-                }
-             }
-            );
-        };
+    //     uploadTask.on(
+    //         "state_changed",
+    //         (snapshot) => {
+    //             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //             console.log(`Upload is ${progress}% done`);
+    //         },
+    //         (error) => {
+    //             console.error("Image upload failed:", error.message);
+    //             setError("Failed to upload image. Please try again.");
+    //         },
+    //         async () => {
+    //             // Upload completed successfully
+    //             try {
+    //                 const url = await getDownloadURL(uploadTask.snapshot.ref);
+    //                 setImageUrl(url);
+    //                 console.log("Image uploaded successfully. URL:", url);
+    //             } catch (err) {
+    //                 console.error("Failed to get download URL:", err.message);
+    //                 setError("Failed to get image URL. Please try again.");
+    //             }
+    //          }
+    //         );
+    //     };
 
 
   /**************************************************************************
@@ -533,7 +541,7 @@ function RegisterProvider() {
             <div className="container mt-5 register-container">
         <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8 col-sm-10">
-                <h1 className="text-center mb-4 register-title">Join as Customer</h1>
+                <h1 className="text-center mb-4 register-title">Join as Provider</h1>
                 
                 {/* Error & Success UI */}
                 {error && <div className="alert alert-danger">{error}</div>}
@@ -592,6 +600,88 @@ function RegisterProvider() {
                             disabled={isRegistering}
                             />
                         </div>
+                        {/* additional input for provider extra details*/}
+                                {/* AVAILABILITY */}
+                                <div className="mb-3">
+                                    <label className="form-label">Availability (comma-separated)</label>
+                                    <input
+                                    type="text"
+                                    className="form-control"
+                                    value={availability}
+                                    onChange={(e) => setAvailability(e.target.value.split(","))}
+                                    placeholder="e.g., Monday 4-8pm, Tuesday 8-10am, Friday 6-7pm"
+                                    required
+                                    />
+                                </div>
+                                
+                                {/* IMAGE UPLOAD */}
+                                <div className="mb-3">
+                                    <label className="form-label">Upload Image</label>
+                                    <input
+                                    type="file"
+                                    className="form-control"
+                                    // onChange={(e) => handleImageUpload(e)}
+                                    accept="image/*"
+                                    placeholder="image to be placed on our website. Image of you or your work."
+                                    required
+                                    />
+                                    </div>
+
+                                
+                                {/* PORTFOLIO LINK */}
+                                <div className="mb-3">
+                                    <label className="form-label">Portfolio Link</label>
+                                    <input
+                                    type="url"
+                                    className="form-control"
+                                    value={portfolioLink}
+                                    onChange={(e) => setPortfolioLink(e.target.value)}
+                                    placeholder="Enter portfolio link ex: instagram profile"
+                                    />
+                                </div>
+                                
+                                {/* PRICE */}
+                                <div className="mb-3">
+                                    <label className="form-label">Price (comma-separated)</label>
+                                    <input
+                                    type="text"
+                                    className="form-control"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value.split(",").map(Number))}
+                                    placeholder="e.g., 1 person: $50, 2 people: $98, 3+: 20% discount"
+                                    required
+                                    />
+                                </div>
+                                
+                                {/* SPECIALTY */}
+                                <div className="mb-3">
+                                    <label className="form-label">Specialty</label>
+                                    <select
+                                    className="form-control"
+                                    value={specialty}
+                                    onChange={(e) => setSpecialty(e.target.value)}
+                                    required
+                                    >
+                                        <option value="" disabled>
+                                            Select a specialty
+                                        </option>
+                                        <option value="Photographer">Photographer</option>
+                                        <option value="Nail Stylist">Nail Stylist</option>
+                                        <option value="Barber">Barber/hair Stylist</option>
+                                        </select>
+                                </div>
+                                
+                                {/* SCHEDULE */}
+                                <div className="mb-3">
+                                    <label className="form-label">Schedule (comma-separated)</label>
+                                    <input
+                                    type="text"
+                                    className="form-control"
+                                    value={schedule}
+                                    onChange={(e) => setSchedule(e.target.value.split(","))}
+                                    placeholder="e.g., 9:00-10:00, 13:00-14:00"
+                                    />
+                                </div>
 
                     {/* REGISTER BUTTON */}
                     <button
@@ -648,7 +738,7 @@ function RegisterProvider() {
                                 />
                                 </div>
 
-                                // additional input for provider extra details
+                                {/* additional input for provider extra details*/}
                                 {/* AVAILABILITY */}
                                 <div className="mb-3">
                                     <label className="form-label">Availability (comma-separated)</label>
@@ -668,7 +758,7 @@ function RegisterProvider() {
                                     <input
                                     type="file"
                                     className="form-control"
-                                    onChange={(e) => handleImageUpload(e)}
+                                    // onChange={(e) => handleImageUpload(e)}
                                     accept="image/*"
                                     placeholder="image to be placed on our website. Image of you or your work."
                                     required
@@ -770,4 +860,4 @@ function RegisterProvider() {
         );
 }
 
-export default RegisteProvider;
+export default RegisterProvider;
