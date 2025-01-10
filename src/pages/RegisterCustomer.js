@@ -120,13 +120,20 @@ function RegisterCustomer() {
       return true; // Email is already in use in Firebase Auth
     }
 
-    // 5b) Check Firestore "customers" collection
+    // 5b) Check Firestore "customers" and "providers" collection
     const q = query(collection(db, "customers"), where("email", "==", email));
     const querySnap = await getDocs(q);
     if (!querySnap.empty) {
       // There's a doc with that email
       return true;
     }
+
+    const q2 = query(collection(db, "providers"), where("email", "==", email));
+        const querySnap2 = await getDocs(q2);
+        if (!querySnap.empty) {
+          // There's a doc with that email
+          return true;
+        }
     return false;
   };
 
