@@ -344,6 +344,10 @@ function RegisterProvider() {
   /**************************************************************************
    10) TIMEOUT => DELETE UNVERIFIED USER
    *************************************************************************/
+
+   //TODO: Avoid exccessive API calls by debouncing the
+   // recursive checkEmailVerified function
+
   const handleTimeout = async () => {
     setIsRegistering(false);
     setTimer(0);
@@ -362,6 +366,15 @@ function RegisterProvider() {
       const reauthed = await reauthenticateUser(user, password);
       if (!reauthed) {
         console.warn("Could not reauth. Attempting delete anyway...");
+      }
+
+      //TODO: Check if this is logical....
+
+      // For Google Users:
+      if (googleUser) {
+        console.log("Google user detected, deleting account without reauthentication.");
+      } else if (password) {
+        await reauthenticateUser(user, password);
       }
 
       await deleteUser(user);
@@ -457,7 +470,9 @@ function RegisterProvider() {
 
       if (result._tokenResponse.isNewUser) {
         setGoogleUser(user);
-        alert("Google account authenticated! Please set a password.");
+        setIsRegistering(true);
+        localStorage.setItem("registrationInProgress", "true");
+        alert("Google account authenticated! Please set additional details.");
       } else {
         setError("This Google account is already linked to another login method.");
       }
@@ -496,7 +511,13 @@ function RegisterProvider() {
         username: username || googleUser.displayName,
         email: googleUser.email,
         createdAt: new Date(),
-        //TODO: add all other fields
+        availability,
+        imageUrl,
+        portfolioLink,
+        price,
+        specialty,
+        schedule,
+        location,
        
       });
 
@@ -851,7 +872,7 @@ function RegisterProvider() {
                                     type="text"
                                     className="form-control"
                                     value={price}
-                                    onChange={(e) => setPrice(e.target.value.split(",").map(Number))}
+                                    onChange={(e) => setPrice(e.target.value.split(","))}
                                     placeholder="e.g., 1 person: $50, 2 people: $98, 3+: 20% discount"
                                     required
                                     />
