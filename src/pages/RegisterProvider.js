@@ -75,8 +75,12 @@ function RegisterProvider() {
    *************************************************************************/
   useEffect(() => {
     const regInProgress = localStorage.getItem("registrationInProgress"); // custom flag to track the state of the registration process and ensures actions (like cleaning up unverified users) are correctly handled even after a page refresh.
+    const isGoogleSignup = localStorage.getItem("isGoogleSignup") === "true"; // Check if it's a Google signup
+    const savedGoogleUser = JSON.parse(localStorage.getItem("googleUser")); // Retrieve Google user data
+
     if (regInProgress === "true") {
       const user = auth.currentUser;
+    // In here if email verified for users registering with email => they already filled out all the required fields
       if (user && !user.emailVerified) {
         console.log("Page refreshed mid-registration. Attempting to delete user.");
         deleteUser(user)
@@ -90,7 +94,34 @@ function RegisterProvider() {
           .finally(() => {
             localStorage.removeItem("registrationInProgress");
           });
-      } else {
+      }
+      // TODO: if refreshed and google provider and did not fill up required fields delete auth
+      else if (isGoogleSignup && savedGoogleUser) {
+        console.log("Google user detected. Checking if required fields are completed.");
+        // If fields are not filled
+        const requiredFieldsFilled = localStorage.getItem("googleFieldsFilled") === "true";
+  
+        if (!requiredFieldsFilled) {
+          console.log("Google user did not complete required fields. Deleting user...");
+          deleteUser(savedGoogleUser)
+            .then(() => {
+              console.log("Google user deleted.");
+            })
+            .catch((err) => {
+              console.error("Failed to delete Google user:", err.message);
+            })
+            .finally(() => {
+              localStorage.removeItem("registrationInProgress");
+              localStorage.removeItem("isGoogleSignup");
+              localStorage.removeItem("googleUser");
+            });
+        } else {
+          console.log("Google user has completed required fields. No action needed.");
+          localStorage.removeItem("registrationInProgress");
+        }
+      } 
+      
+      else {
         console.log("No unverified user to delete on mount or user is verified.");
         localStorage.removeItem("registrationInProgress");
       }
@@ -520,7 +551,7 @@ function RegisterProvider() {
         location,
        
       });
-
+      localStorage.setItem("googleFieldsFilled", "true"); // Mark fields as completed
       alert("Account linked successfully! You can now log in with email and password.");
       navigate("/");
     } catch (err) {
