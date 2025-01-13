@@ -501,6 +501,7 @@ function RegisterProvider() {
 
       if (result._tokenResponse.isNewUser) {
         setGoogleUser(user);
+        isGoogleSignup(true);
         setIsRegistering(true);
         localStorage.setItem("registrationInProgress", "true");
         alert("Google account authenticated! Please set additional details.");
