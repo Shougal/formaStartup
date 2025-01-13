@@ -20,7 +20,11 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebaseConfig";
+import {ref, uploadBytes} from "firebase/storage";
+// allows to randomize letters -> using this for randomizing image names from users
+import{v4} from 'uuid';
+// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import "./Customers.css";
 
 function RegisterProvider() {
@@ -30,11 +34,12 @@ function RegisterProvider() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [availability, setAvailability] = useState([]); //array
-  const [imageUrl, setImageUrl] = useState(""); // link to image
+  const [imageUrl, setImageUrl] = useState(null); // link to image
   const [portfolioLink, setPortfolioLink] = useState(""); // link to profile
   const [price, setPrice] = useState([]); // array of prices
   const [specialty, setSpecialty] = useState("");
   const [schedule, setSchedule] = useState([]); // schedule of week with free slots
+  const [location, setLocation] = useState(""); // Location of the service
 
 
 
@@ -62,14 +67,14 @@ function RegisterProvider() {
   // For navigation
   const navigate = useNavigate();
 
-  // Google auth provider (optional)
+  // Google auth provider 
   const googleProvider = new GoogleAuthProvider();
 
   /**************************************************************************
     2) useEffect: CLEAN UP UNVERIFIED USER IF PAGE REFRESHED
    *************************************************************************/
   useEffect(() => {
-    const regInProgress = localStorage.getItem("registrationInProgress");
+    const regInProgress = localStorage.getItem("registrationInProgress"); // custom flag to track the state of the registration process and ensures actions (like cleaning up unverified users) are correctly handled even after a page refresh.
     if (regInProgress === "true") {
       const user = auth.currentUser;
       if (user && !user.emailVerified) {
@@ -219,9 +224,18 @@ function RegisterProvider() {
         setError("Please select a specialty.");
         return;
       }
+
+      // Validate location
+      if(!location){
+        setError("Please select a location.")
+        return;
+      }
     
-      // Validate image
-    //   if (!imageUrl) {
+      //TODO: IMAGE Validation...
+
+
+     // Validate image
+    //   if (imageUrl==null) {
     //     setError("Please upload an image.");
     //     return;
     //   }
@@ -237,6 +251,8 @@ function RegisterProvider() {
         setError("Please provide valid prices");
         return;
       }
+
+      //TODO: What is it we want from the schedule
     
       /* Validate schedule
       if (schedule.length === 0) {
@@ -260,7 +276,7 @@ function RegisterProvider() {
 
     try {
       setIsRegistering(true); // disable register button
-      localStorage.setItem("registrationInProgress", "true");
+      localStorage.setItem("registrationInProgress", "true"); // set flag to true to track page refreshes
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -306,6 +322,7 @@ function RegisterProvider() {
             price,
             specialty,
             schedule,
+            location,
           });
           alert("Email verified and customer registered successfully!");
           navigate("/"); // go to home or login
@@ -397,7 +414,7 @@ function RegisterProvider() {
    11b) HELPER: RESET REGISTRATION FLOW
    *************************************************************************/
   const resetRegistration = (msg) => {
-    // Generic helper if you want to clean up user state
+    // Generic helper to clean up user state
     setIsRegistering(false);
     setTimer(240);
     setSuccessMessage("");
@@ -427,8 +444,11 @@ function RegisterProvider() {
     }
   };
 
+  /* TODO: add and remove registration in progress flag for google 
+  sigunup !!! */
+
   /**************************************************************************
-    13) GOOGLE SIGNUP (OPTIONAL)
+    13) GOOGLE SIGNUP 
    *************************************************************************/
   const handleGoogleSignup = async () => {
     try {
@@ -476,6 +496,7 @@ function RegisterProvider() {
         username: username || googleUser.displayName,
         email: googleUser.email,
         createdAt: new Date(),
+        //TODO: add all other fields
        
       });
 
@@ -494,7 +515,29 @@ function RegisterProvider() {
    /**************************************************************************
     15) Handle Image storage
    *************************************************************************/
-  
+    // const handleImageUpload =() =>{
+    //     if(imageUrl==null){
+    //         return;
+    //     }
+    //     // reference to file uploads is the images bucket storage
+    //     // making file name -> file name from user + random characters
+    //     const imageRef = ref(storage, 'images/${imageUrl.name + v4()}');
+
+    //     // Uploading image to firebase
+    //     uploadBytes(imageRef, imageUrl).then(() => {
+    //         alert("Image uploaded");
+    //     })
+
+        /*TODO: create a storage in firestore */
+
+        /* TODO: Link image and save to user imgage column in the providers database*/
+
+        /*TODO: allow only the latest image uploaded, one image! if they upload another image only
+        save the latest one */
+
+        /*TODO: After approval of admin, display image in the home page under their name */
+
+    // }
     // const storage = getStorage();
     
     // const handleImageUpload = (e) => {
@@ -613,19 +656,22 @@ function RegisterProvider() {
                                     required
                                     />
                                 </div>
-                                
+                                {/* TODO: IMAGE UPLOAD and Storage bucket */}
+
+
                                 {/* IMAGE UPLOAD */}
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     <label className="form-label">Upload Image</label>
                                     <input
                                     type="file"
                                     className="form-control"
-                                    // onChange={(e) => handleImageUpload(e)}
+                                    // attempting to take the first file and call handle image upload
+                                    onChange={(e) => {setImageUrl(e.target.files[0]), handleImageUpload()}}
                                     accept="image/*"
                                     placeholder="image to be placed on our website. Image of you or your work."
                                     required
                                     />
-                                    </div>
+                                    </div> */}
 
                                 
                                 {/* PORTFOLIO LINK */}
@@ -647,7 +693,7 @@ function RegisterProvider() {
                                     type="text"
                                     className="form-control"
                                     value={price}
-                                    onChange={(e) => setPrice(e.target.value.split(",").map(Number))}
+                                    onChange={(e) => setPrice(e.target.value.split(","))}
                                     placeholder="e.g., 1 person: $50, 2 people: $98, 3+: 20% discount"
                                     required
                                     />
@@ -668,6 +714,22 @@ function RegisterProvider() {
                                         <option value="Photographer">Photographer</option>
                                         <option value="Nail Stylist">Nail Stylist</option>
                                         <option value="Barber">Barber/hair Stylist</option>
+                                        </select>
+                                </div>
+
+                                {/* Location */}
+                                <div className="mb-3">
+                                    <label className="form-label">Location</label>
+                                    <select
+                                    className="form-control"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    required
+                                    >
+                                        <option value="" disabled>
+                                            Select your service location
+                                        </option>
+                                        <option value="Charlottesville, VA">Charlottesville,VA</option>
                                         </select>
                                 </div>
                                 
@@ -713,6 +775,7 @@ function RegisterProvider() {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder={googleUser.displayName || "Enter your username"}
+                                required
                                 />
                             </div>
                             
@@ -752,7 +815,10 @@ function RegisterProvider() {
                                     />
                                 </div>
                                 
-                                {/* IMAGE UPLOAD */}
+                                {/*TODO: add image and storage */}
+
+
+                                {/* IMAGE UPLOAD
                                 <div className="mb-3">
                                     <label className="form-label">Upload Image</label>
                                     <input
@@ -763,7 +829,7 @@ function RegisterProvider() {
                                     placeholder="image to be placed on our website. Image of you or your work."
                                     required
                                     />
-                                    </div>
+                                    </div> */}
 
                                 
                                 {/* PORTFOLIO LINK */}
@@ -806,6 +872,22 @@ function RegisterProvider() {
                                         <option value="Photographer">Photographer</option>
                                         <option value="Nail Stylist">Nail Stylist</option>
                                         <option value="Barber">Barber/hair Stylist</option>
+                                        </select>
+                                </div>
+
+                                {/* Location */}
+                                <div className="mb-3">
+                                    <label className="form-label">Location</label>
+                                    <select
+                                    className="form-control"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    required
+                                    >
+                                        <option value="" disabled>
+                                            Select your service location
+                                        </option>
+                                        <option value="Charlottesville, VA">Charlottesville,VA</option>
                                         </select>
                                 </div>
                                 
