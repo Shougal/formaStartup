@@ -7,6 +7,10 @@ import { sendVerificationEmail } from "../firebase/auth";
 
 import "./pages.css";
 
+
+/* TODO: For when page is refreshed in registration but email is verified:
+1) Check if they filled out all fields, if not redirect to that */
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -83,6 +83,7 @@ function RegisterProvider() {
     // In here if email verified for users registering with email => they already filled out all the required fields
       if (user && !user.emailVerified) {
         console.log("Page refreshed mid-registration. Attempting to delete user.");
+        //TODO: Reauth?
         deleteUser(user)
           .then(() => {
             console.log("Unverified user deleted.");
@@ -103,6 +104,7 @@ function RegisterProvider() {
   
         if (!requiredFieldsFilled) {
           console.log("Google user did not complete required fields. Deleting user...");
+          //TODO: Reauth?
           deleteUser(savedGoogleUser)
             .then(() => {
               console.log("Google user deleted.");
@@ -114,16 +116,22 @@ function RegisterProvider() {
               localStorage.removeItem("registrationInProgress");
               localStorage.removeItem("isGoogleSignup");
               localStorage.removeItem("googleUser");
+              // TODO: remove googleFields filled
+              localStorage.removeItem("googleFieldsFilled");
             });
         } else {
           console.log("Google user has completed required fields. No action needed.");
           localStorage.removeItem("registrationInProgress");
+          //TODO: remove google signup?
+          localStorage.removeItem("isGoogleSignup");
+          //TODO: remove google user ??
         }
       } 
       
       else {
         console.log("No unverified user to delete on mount or user is verified.");
         localStorage.removeItem("registrationInProgress");
+        //TODO: remove google signup?
       }
     }
   }, []);
@@ -403,6 +411,7 @@ function RegisterProvider() {
 
       // For Google Users:
       if (googleUser) {
+        //TODO: Reauth for google?
         console.log("Google user detected, deleting account without reauthentication.");
       } else if (password) {
         await reauthenticateUser(user, password);
@@ -420,6 +429,7 @@ function RegisterProvider() {
       setIsRegistering(false);
       setTimer(240);
       localStorage.removeItem("registrationInProgress");
+      // TODO: remove isGoogleSignup flag?
     }
   };
 
@@ -434,7 +444,7 @@ function RegisterProvider() {
       console.warn("No user found on cancel.");
       resetRegistration("Registration canceled. You can register again.");
       return;
-    }
+    }  // TODO: add and if not googlesignup
 
     console.log("Cancel -> reauth & delete user:", user.email);
     try {
@@ -452,6 +462,10 @@ function RegisterProvider() {
     } finally {
       resetRegistration("Registration canceled. You can register again.");
     }
+
+    //TODO: Cancel logic for google signup after redirecting
+
+
   };
 
   /**************************************************************************
@@ -464,6 +478,10 @@ function RegisterProvider() {
     setSuccessMessage("");
     setError(msg);
     localStorage.removeItem("registrationInProgress");
+    //TODO: remove isGoogleSignUp
+    localStorage.removeItem("isGoogleSignup")
+    //TODO remove googlefieldsfilled
+    localStorage.removeItem("googleFieldsFilled");
   };
 
   /**************************************************************************
@@ -495,6 +513,7 @@ function RegisterProvider() {
     13) GOOGLE SIGNUP 
    *************************************************************************/
   const handleGoogleSignup = async () => {
+    /*TODO: Handle google cancel and set flag accrodingly */
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -504,6 +523,8 @@ function RegisterProvider() {
         isGoogleSignup(true);
         setIsRegistering(true);
         localStorage.setItem("registrationInProgress", "true");
+        //TODO: set fields filled flag to false
+        localStorage.removeItem("googleFieldsFilled");
         alert("Google account authenticated! Please set additional details.");
       } else {
         setError("This Google account is already linked to another login method.");
@@ -955,13 +976,14 @@ function RegisterProvider() {
                                     placeholder="e.g., 9:00-10:00, 13:00-14:00"
                                     />
                                 </div>
-                                <button type="submit" className="btn register-button w-100">Set Password</button>
+                                <button type="submit" className="btn register-button w-100">Submit</button>
                         </form>
                     )}
                     
                     
                     {/* If we're in the "registering" phase, show timer/resend/cancel UI */}
                     
+                    {/* TODO: if google signup resend verification button shouldn't be visible */}
                     {isRegistering && (
                         <div className="mt-3">
                             <p className="text-center">

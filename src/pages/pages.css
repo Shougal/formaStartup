@@ -70,12 +70,18 @@
     background-color: #c2a3c2;
 }
 
+.form-hint {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 5px;
+}
 .error-message {
     color: red;
     font-size: 0.9rem;
     margin-bottom: 10px;
     text-align: center;
 }
+
 
 .secondary-button {
     background-color: white;
