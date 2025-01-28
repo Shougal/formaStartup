@@ -7,7 +7,7 @@ def register_provider(request):
         if form.is_valid():
             provider = form.save()
             #TODO:Handle post-save actions here, like logging user in or redirecting
-            return redirect('some_view_name')
+            return redirect('index')
     else:
         form = ProviderSignUpForm()
     return render(request, 'registration/register_provider.html', {'form': form})
@@ -18,11 +18,14 @@ def register_customer(request):
         if form.is_valid():
             customer = form.save()
             # TODO:Handle post-save actions here
-            return redirect('some_view_name')
+            return redirect('index')
     else:
         form = CustomerSignUpForm()
     return render(request, 'registration/register_customer.html', {'form': form})
 
+
+def index(request):
+    return render(request, 'index.html')
 
 
 
