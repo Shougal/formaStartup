@@ -20,13 +20,17 @@ load_dotenv() # This loads an environment file so we can use that to have creden
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+AUTH_USER_MODEL = 'api.Provider'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+#TODO: Ensure security key is kept secret and is not exposed in codebase
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-0ps1ba&to2jzzyvp@6&fb9pqs1uk14pob^7i4&)5=6y@%n!s)#'
 
+
+#TODO: Turn off debug upon production
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,6 +43,10 @@ ALLOWED_HOSTS = ["*"] # Allows any host to host this django project
 # Below are configuration for the jwt tokens to work properly
 
 REST_FRAMEWORK = {
+'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer',
+    ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -105,6 +113,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+#TODO: for production, you might want to switch to a more robust database system like PostgreSQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -112,6 +121,7 @@ DATABASES = {
     }
 }
 
+#TODO: Configure email settings
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

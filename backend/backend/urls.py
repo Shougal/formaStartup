@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView
+# from api.views import CustomerRegistration, ProviderRegistration
 
 # THESE VIEWS ARE PREBUILT VIEWS THAT ALLOWS TO ACCESS OUR ACCESS AND REFRESH TOKENS
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -24,7 +24,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/user/register/', CreateUserView.as_view(), name="register" ),
+    # path('register/customer/', CustomerRegistration.as_view(), name='customer-registration'),
+    # path('register/provider/', ProviderRegistration.as_view(), name='provider-registration'),
     path('api/token/', TokenObtainPairView.as_view(), name="get_token"),
     path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh"),
     path('api/auth/', include('rest_framework.urls')),
