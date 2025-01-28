@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 # from api.views import CustomerRegistration, ProviderRegistration
-from api.views import register_provider, register_customer
+#TODO: Remove index
+from api.views import register_provider, register_customer, index
 
 # THESE VIEWS ARE PREBUILT VIEWS THAT ALLOWS TO ACCESS OUR ACCESS AND REFRESH TOKENS
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -25,11 +26,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('register/provider/', register_provider, name='register_provider'),
-    path('register/customer/', register_customer, name='register_customer'),
-    # path('register/customer/', CustomerRegistration.as_view(), name='customer-registration'),
-    # path('register/provider/', ProviderRegistration.as_view(), name='provider-registration'),
     path('api/token/', TokenObtainPairView.as_view(), name="get_token"),
     path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh"),
     path('api/auth/', include('rest_framework.urls')),
+    path('api/', include('api.urls')),
 ]
