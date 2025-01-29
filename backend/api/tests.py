@@ -72,12 +72,15 @@ class ProviderRegistrationTestCase(TestCase):
             'password2': 'testpassword123',
             'specialty': 'Testing',
             'location': 'Testville',
+            'availability': '{"Monday": "9-5"}',  # Added availability
+            'prices': '{"Service A": "50"}',  # Added prices
         }
         response = self.client.post(reverse('register_provider'), data)
         self.assertEqual(response.status_code, 302)  # redirect after successful registration
 
         # Check that the user was created
         self.assertTrue(Provider.objects.filter(username='newprovider').exists())
+
 
 """Customer registration"""
 class CustomerRegistrationTestCase(TestCase):
