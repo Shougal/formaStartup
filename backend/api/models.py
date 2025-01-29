@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
+# class AdminUser(AbstractUser):
+#     pass
+
 class Provider(AbstractUser):
     specialty = models.CharField(max_length = 100)
     availability = models.JSONField()
@@ -11,10 +14,9 @@ class Provider(AbstractUser):
     location = models.CharField(max_length=255)
     is_approved = models.BooleanField(default=False)
     email = models.EmailField(unique=True, blank=False)  # Enforce email uniqueness
-    # class Meta:
-    #     db_table = "provider"
-    #     app_label = "api"
-    #     permissions = ("")
+    class Meta:
+        verbose_name = "Provider"
+        verbose_name_plural = "Providers"
     #TODO: Add user and group persmissions
     groups = models.ManyToManyField(
         'auth.Group',
@@ -36,6 +38,10 @@ class Provider(AbstractUser):
 class Customer(AbstractUser):
     location = models.CharField(max_length=255)
     email = models.EmailField(unique=True, blank=False)  # Enforce email uniqueness
+
+    class Meta:
+        verbose_name = "Customer"
+        verbose_name_plural = "Customers"
     # TODO: Add user and group persmissions
     groups = models.ManyToManyField(
         'auth.Group',
