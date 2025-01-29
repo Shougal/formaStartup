@@ -20,7 +20,8 @@ load_dotenv() # This loads an environment file so we can use that to have creden
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-AUTH_USER_MODEL = 'api.Provider'
+AUTH_USER_MODEL = 'api.User'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
