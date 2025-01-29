@@ -1,61 +1,35 @@
 from django.db import models
-#from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
-# Create your models here.
 
+# BaseUser is now abstract (does NOT create a table)
+class BaseUser(AbstractUser):
+    email = models.EmailField(unique=True, blank=False)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    is_provider = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
 
-# class AdminUser(AbstractUser):
-#     pass
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
-class Provider(AbstractUser):
-    specialty = models.CharField(max_length = 100)
+    class Meta:
+        abstract = True  # This prevents Django from creating a table for BaseUser
+
+# Concrete user model (Django will use this for AUTH_USER_MODEL)
+class User(BaseUser):
+    pass  # This is needed to create a real table in the database
+
+# Provider and Customer now extend User (not BaseUser)
+class Provider(User):
+    specialty = models.CharField(max_length=100)
     availability = models.JSONField()
     prices = models.JSONField()
-    location = models.CharField(max_length=255)
     is_approved = models.BooleanField(default=False)
-    email = models.EmailField(unique=True, blank=False)  # Enforce email uniqueness
+
     class Meta:
         verbose_name = "Provider"
         verbose_name_plural = "Providers"
-    #TODO: Add user and group persmissions
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='providers',
-        verbose_name= "Provider Group"
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='providers_permissions',
-        verbose_name= "Provider Permissions",
-    )
-    # USERNAME_FIELD tells django that the unique identifier should be the email
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'specialty', 'location', 'availability', 'prices']
 
-
-
-
-class Customer(AbstractUser):
-    location = models.CharField(max_length=255)
-    email = models.EmailField(unique=True, blank=False)  # Enforce email uniqueness
-
+class Customer(User):
     class Meta:
         verbose_name = "Customer"
         verbose_name_plural = "Customers"
-    # TODO: Add user and group persmissions
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customers',
-        verbose_name= "Customer Group"
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customer_permissions',
-        verbose_name= "Customer Permissions",
-    )
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'location']
-
-"""
-CREATE A META CLASS FOR PERMISSION AND GROUPS"""
-
