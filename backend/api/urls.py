@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RegisterProviderView, RegisterCustomerView, UserLoginView
+from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -16,8 +16,8 @@ urlpatterns = [
     path('register/customer/', RegisterCustomerView.as_view(), name='register_customer'),
 
     # API-based authentication (JWT-based)
-    path('login/', UserLoginView.as_view(), name='user_login'),
-    path('logout/', views.user_logout, name='logout'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
     path('token/', TokenObtainPairView.as_view(), name='get_token'),  # Get access & refresh tokens
     path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),  # Refresh token
 ]
