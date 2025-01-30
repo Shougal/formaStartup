@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Provider, Customer
+from .models import Provider, Customer, User
 from django.urls import reverse
 
 
@@ -102,3 +102,37 @@ class CustomerRegistrationTestCase(TestCase):
 
         # Check that the user was created
         self.assertTrue(Customer.objects.filter(username='newcustomer').exists())
+
+
+
+
+
+        """
+                        Login and Logout Functionalities
+        """
+class AuthTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(email='test@example.com', username='testuser', password='password123')
+
+    """Testing Login"""
+    def test_login_valid_user(self):
+        response = self.client.post(reverse('login'), {'email': 'test@example.com', 'password': 'password123'})
+        self.assertEqual(response.status_code, 302)  # expecting a redirect after login
+
+    def test_login_invalid_user(self):
+        response = self.client.post(reverse('login'), {'email': 'wrong@example.com', 'password': 'password'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('invalid login' in response.content.decode())
+
+    """Tetsing Logout"""
+    def test_logout(self):
+        self.client.login(email='test@example.com', password='password123')
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 302)  # expecting a redirect after logout
+
+    def test_session_after_login(self):
+        self.client.login(email='test@example.com', password='password123')
+        """TODO: Change view to correct view name after Implementing it, this is TDD"""
+        #TODO:Change view later - this is only for testing purposes
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)  # User should be logged in
