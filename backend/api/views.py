@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import ProviderSignUpForm, CustomerSignUpForm
+from django.contrib.auth import authenticate, login, logout
 
 def register_provider(request):
     if request.method == 'POST':
@@ -29,7 +30,31 @@ def register_customer(request):
 def index(request):
     return render(request, 'index.html')
 
-"""TODO: Reimplement this by adding correct redirect"""
+"""                           Login and Logout Views                             """
+
+#TODO: HAndle Login TOKENS and REfresh Token
+def user_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            #TODO: Change from index to correct redirect page later
+            return redirect('index')
+        else:
+            #TODO: Add specific/correct login html
+            return render(request, 'login.html', {'error': 'invalid login'})
+    else:
+        #TODO: Add specific/correct login html
+        return render(request, 'login.html')
+
+def user_logout(request):
+    logout(request)
+    #TODO: Redirect to correct login page
+    return redirect('login')
+
+#TODO: Reimplement this by adding correct redirect
 # @login_required
 # @user_passes_test(lambda user: user.is_superuser)
 # def admin_dashboard(request):
