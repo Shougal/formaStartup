@@ -6,9 +6,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from .models import User, Provider, Customer
-from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer
+from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions, generics
+
 """         Register Provider View with serializer and email&username validation    """
 
 class RegisterProviderView(APIView):
@@ -97,6 +98,7 @@ class UserLoginView(APIView):
     """
     Handles user login and returns a JWT token upon successful authentication.
     """
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -134,12 +136,56 @@ class UserLoginView(APIView):
 #         #TODO: Add specific/correct login html
 #         return render(request, 'login.html')
 
-#TODO: Create UserLogout API View
 
-def user_logout(request):
-    logout(request)
-    #TODO: Redirect to correct login page
-    return redirect('login')
+class UserLogoutView(generics.GenericAPIView):
+    serializer_class = LogoutSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+# class UserLogoutView(APIView):
+#     """
+#     Handle user logout by blacklisting the refresh token.
+#     """
+#     permission_classes = [IsAuthenticated]  # Requires authentication to logout
+#
+#     def post(self, request, *args, **kwargs):
+#         try:
+#             # Get refresh token from request data
+#             refresh_token = request.data.get('refresh_token')
+#             if not refresh_token:
+#                 return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+#             token = RefreshToken(refresh_token)
+#
+#             # Blacklist the refresh token
+#             token.blacklist()
+#
+#             return Response(
+#                 {'message': 'Logout successful.'},
+#                 status=status.HTTP_200_OK
+#             )
+#         except Exception as e:
+#             # Check if it's a token-related error
+#             if 'Token is invalid or expired' in str(e):
+#                 return Response(
+#                     {'error': 'Invalid or expired token.'},
+#                     status=status.HTTP_400_BAD_REQUEST
+#                 )
+#             return Response(
+#                 {'error': 'Something went wrong during logout.'},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+#
+# def user_logout(request):
+#     logout(request)
+#     #TODO: Redirect to correct login page
+#     return redirect('login')
 
 #TODO: Reimplement this by adding correct redirect
 # @login_required
