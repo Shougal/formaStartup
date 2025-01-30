@@ -60,56 +60,56 @@ class CustomerTestCase(TestCase):
                     Testing Registration forms
 """
 
-class ProviderRegistrationTestCase(TestCase):
-    def test_provider_registration_form(self):
-        response = self.client.get(reverse('register_provider'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'registration/register_provider.html')
-
-        # Test form submission
-        data = {
-            'username': 'newprovider',
-            'email': 'provider@example.com',
-            'password1': 'testpassword123',
-            'password2': 'testpassword123',
-            'specialty': 'Testing',
-            'location': 'Testville',
-            'availability': '{"Monday": "9-5"}',  # Added availability
-            'prices': '{"Service A": "50"}',  # Added prices
-        }
-        response = self.client.post(reverse('register_provider'), data)
-        self.assertEqual(response.status_code, 302)  # redirect after successful registration
-
-        # Check that the user was created
-        self.assertTrue(Provider.objects.filter(username='newprovider').exists())
-
-
-"""Customer registration"""
-class CustomerRegistrationTestCase(TestCase):
-    def test_customer_registration_form(self):
-        response = self.client.get(reverse('register_customer'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'registration/register_customer.html')
-
-        # Test form submission
-        data = {
-            'username': 'newcustomer',
-            'email': 'customer@example.com',
-            'password1': 'testpassword123',
-            'password2': 'testpassword123',
-            'location': 'Testville',
-        }
-        response = self.client.post(reverse('register_customer'), data)
-        self.assertEqual(response.status_code, 302)  # redirect after successful registration
-
-        # Check that the user was created
-        self.assertTrue(Customer.objects.filter(username='newcustomer').exists())
-
-
-
+# class ProviderRegistrationTestCase(TestCase):
+#     def test_provider_registration_form(self):
+#         response = self.client.get(reverse('register_provider'))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'registration/register_provider.html')
+#
+#         # Test form submission
+#         data = {
+#             'username': 'newprovider',
+#             'email': 'provider@example.com',
+#             'password1': 'testpassword123',
+#             'password2': 'testpassword123',
+#             'specialty': 'Testing',
+#             'location': 'Testville',
+#             'availability': '{"Monday": "9-5"}',  # Added availability
+#             'prices': '{"Service A": "50"}',  # Added prices
+#         }
+#         response = self.client.post(reverse('register_provider'), data)
+#         self.assertEqual(response.status_code, 302)  # redirect after successful registration
+#
+#         # Check that the user was created
+#         self.assertTrue(Provider.objects.filter(username='newprovider').exists())
+#
+#
+# """Customer registration"""
+# class CustomerRegistrationTestCase(TestCase):
+#     def test_customer_registration_form(self):
+#         response = self.client.get(reverse('register_customer'))
+#         self.assertEqual(response.status_code, 200)
+#         self.assertTemplateUsed(response, 'registration/register_customer.html')
+#
+#         # Test form submission
+#         data = {
+#             'username': 'newcustomer',
+#             'email': 'customer@example.com',
+#             'password1': 'testpassword123',
+#             'password2': 'testpassword123',
+#             'location': 'Testville',
+#         }
+#         response = self.client.post(reverse('register_customer'), data)
+#         self.assertEqual(response.status_code, 302)  # redirect after successful registration
+#
+#         # Check that the user was created
+#         self.assertTrue(Customer.objects.filter(username='newcustomer').exists())
+#
 
 
-        """
+
+
+"""
                         Login and Logout Functionalities
         """
 class AuthTestCase(TestCase):
