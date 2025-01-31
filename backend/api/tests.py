@@ -11,55 +11,55 @@ from .views import TestProtectedView
 
 
 # # Create your tests here.
-# """
-#                 Testing the provider model
-# """
-#
-# class ProviderTestCase(TestCase):
-#     """Modifying test setup to use Django's set_password"""
-#
-#     def setUp(self):
-#         self.provider = Provider.objects.create(
-#             username="provider1",
-#             email='provider1@example.com',
-#             specialty="Photographer",
-#             availability={"MON": "9-5"},
-#             prices={"1 person": "50", "2 person": "60", "3 person": "70"},
-#             location="Charlottesville, VA"
-#         )
-#         self.provider.set_password("testpass123")
-#         self.provider.save()
-#
-#     def test_model_fields(self):
-#         provider = Provider.objects.get(username="provider1")
-#         self.assertTrue(provider.check_password("testpass123"))
-#         self.assertEqual(provider.specialty, 'Photographer')
-#         self.assertEqual(provider.availability, {"MON": "9-5"})
-#         self.assertEqual(provider.prices, {"1 person": "50", "2 person": "60", "3 person": "70"})
-#         self.assertEqual(provider.location, "Charlottesville, VA")
-#         self.assertFalse(provider.is_approved)
-#         #TODO:Add email check
-#
-# """
-#                 Testing th Customer model
-# """
-# class CustomerTestCase(TestCase):
-#
-#     def setUp(self):
-#         self.customer = Customer.objects.create(
-#             username='customer1',
-#             email='customer1@example.com',
-#             location='Charlottesville, VA',
-#         )
-#         self.customer.set_password('customer1')
-#         self.customer.save()
-#
-#     def test_model_fields(self):
-#         customer = Customer.objects.get(username='customer1')
-#         self.assertTrue(customer.check_password('customer1'))
-#         self.assertEqual(customer.email, 'customer1@example.com')
-#         self.assertEqual(customer.location, 'Charlottesville, VA')
-#
+"""
+                Testing the provider model
+"""
+
+class ProviderTestCase(TestCase):
+    """Modifying test setup to use Django's set_password"""
+
+    def setUp(self):
+        self.provider = Provider.objects.create(
+            username="provider1",
+            email='provider1@example.com',
+            specialty="Photographer",
+            availability={"MON": "9-5"},
+            prices={"1 person": "50", "2 person": "60", "3 person": "70"},
+            location="Charlottesville, VA"
+        )
+        self.provider.set_password("testpass123")
+        self.provider.save()
+
+    def test_model_fields(self):
+        provider = Provider.objects.get(username="provider1")
+        self.assertTrue(provider.check_password("testpass123"))
+        self.assertEqual(provider.specialty, 'Photographer')
+        self.assertEqual(provider.availability, {"MON": "9-5"})
+        self.assertEqual(provider.prices, {"1 person": "50", "2 person": "60", "3 person": "70"})
+        self.assertEqual(provider.location, "Charlottesville, VA")
+        self.assertFalse(provider.is_approved)
+        #TODO:Add email check
+
+"""
+                Testing th Customer model
+"""
+class CustomerTestCase(TestCase):
+
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            username='customer1',
+            email='customer1@example.com',
+            location='Charlottesville, VA',
+        )
+        self.customer.set_password('customer1')
+        self.customer.save()
+
+    def test_model_fields(self):
+        customer = Customer.objects.get(username='customer1')
+        self.assertTrue(customer.check_password('customer1'))
+        self.assertEqual(customer.email, 'customer1@example.com')
+        self.assertEqual(customer.location, 'Charlottesville, VA')
+
 
 
 """
@@ -212,7 +212,6 @@ class ProviderSerializerTest(TestCase):
         serializer = ProviderSerializer(data=self.provider_data)
         self.assertTrue(serializer.is_valid())
         provider = serializer.save()
-        print(provider.email)
         self.assertEqual(User.objects.count(), 1)
         # TODO: Password hashing assertion failed
         self.assertTrue(provider.check_password(self.provider_data['password']))
@@ -225,20 +224,52 @@ class ProviderSerializerTest(TestCase):
 
 
 """Testing Customer serializer"""
-# class CustomerSerializerTest(TestCase):
-#     def setUp(self):
-#         self.customer_data = {
-#             'username': 'customer',
-#             'email': 'customer@example.com',
-#             'password': 'safe_password123',
-#             'location': 'Customer City',
-#         }
+
 #
-#     def test_create_customer_with_valid_data(self):
-#         serializer = CustomerSerializer(data=self.customer_data)
-#         self.assertTrue(serializer.is_valid())
-#         customer = serializer.save()
-#         self.assertEqual(User.objects.count(), 1)
-#         #TODO: Password hashing assertion failed
-#         self.assertTrue(customer.check_password(self.customer_data['password']))
-#         self.assertTrue(customer.is_customer)
+
+
+class CustomerSerializerTest(TestCase):
+    User = get_user_model()
+    def setUp(self):
+        self.customer_data = {
+            'username': 'customer',
+            'email': 'customer@example.com',
+            'password': 'safe_password123',
+            'location': 'Customer City',
+        }
+
+        self.customer_data['is_customer'] = True
+
+    def test_create_customer_with_valid_data(self):
+        serializer = CustomerSerializer(data=self.customer_data)
+        self.assertTrue(serializer.is_valid())
+        customer = serializer.save()
+        self.assertEqual(User.objects.count(), 1)
+        # Check that the password is set correctly, but hashed
+        self.assertTrue(customer.check_password(self.customer_data['password']))
+        self.assertTrue(getattr(customer, 'is_customer', False))  # Check is_customer if exists
+        self.assertTrue(customer.is_customer, "Expected 'is_customer' to be True, but it is False.")
+
+    def test_create_customer_missing_username(self):
+        data = self.customer_data.copy()
+        del data['username']  # Remove username to test its necessity
+        serializer = CustomerSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('username', serializer.errors)
+
+    def test_create_customer_missing_email(self):
+        data = self.customer_data.copy()
+        del data['email']  # Remove email to test its necessity
+        serializer = CustomerSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('email', serializer.errors)
+
+    def test_create_customer_missing_password(self):
+        data = self.customer_data.copy()
+        del data['password']  # Remove password to test its necessity
+        serializer = CustomerSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('password', serializer.errors)
+
+
+
