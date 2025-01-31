@@ -66,9 +66,10 @@ from .views import TestProtectedView
                         Login and Logout Functionalities
         """
 
-User = get_user_model()
+
 
 class AuthTestCase(APITestCase):
+    User = get_user_model()
     def setUp(self):
         # Create test user
         self.user = User.objects.create_user(
@@ -149,80 +150,81 @@ class AuthTestCase(APITestCase):
 
 """                         Testing Serializers.py                              """
 
-# User = get_user_model()
-#
-# """Testing User Serializer"""
-#
-# class UserSerializerTest(TestCase):
-#     def setUp(self):
-#         self.user_data = {
-#             'username': 'testuser',
-#             'email': 'test@example.com',
-#             'password': 'password1234',
-#             'is_provider': False,
-#             'is_customer': True,
-#             'location': 'Test City'
-#         }
-#         self.user = User.objects.create_user(**self.user_data)
-#
-#     def test_valid_user_serializer(self):
-#         serializer = UserSerializer(self.user)
-#         data = serializer.data
-#         self.assertEqual(set(data.keys()), set(['id', 'username', 'email', 'is_provider', 'is_customer', 'location']))
-#         self.assertEqual(data['username'], self.user_data['username'])
-#         self.assertEqual(data['email'], self.user_data['email'])
-#         self.assertEqual(data['is_provider'], self.user_data['is_provider'])
-#         self.assertEqual(data['is_customer'], self.user_data['is_customer'])
-#         self.assertEqual(data['location'], self.user_data['location'])
-#         #TODO: Check password assertion
-#         # self.assertTrue(data.check_password(self.user_data['password']))
-#
-#
-#     def test_user_serializer_with_invalid_data(self):
-#         self.user_data['email'] = 'invalid-email'
-#         serializer = UserSerializer(data=self.user_data)
-#         self.assertFalse(serializer.is_valid())
-#         self.assertIn('email', serializer.errors)
-#
-#     def test_create_user_serializer(self):
-#         user_count = User.objects.count()
-#         serializer = UserSerializer(data=self.user_data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             self.assertEqual(User.objects.count(), user_count + 1)
-#
-# """Testing Provider serializer """
-#
-#
-# class ProviderSerializerTest(TestCase):
-#     def setUp(self):
-#         self.provider_data = {
-#             'username': 'provider',
-#             'email': 'provider@example.com',
-#             'password': 'safe_password123',
-#             'location': 'Provider City',
-#             'specialty': 'Healthcare',
-#             'availability': '{"Monday": "9-5"}',
-#             'prices': '{"session": "100"}',
-#             'is_approved': True
-#         }
-#
-#     def test_create_provider_with_valid_data(self):
-#         serializer = ProviderSerializer(data=self.provider_data)
-#         self.assertTrue(serializer.is_valid())
-#         provider = serializer.save()
-#         self.assertEqual(User.objects.count(), 1)
-#         # TODO: Password hashing assertion failed
-#         self.assertTrue(provider.check_password(self.provider_data['password']))
-#         self.assertTrue(provider.is_provider)
-#         self.assertEqual(provider.specialty, 'Healthcare')
-#
-#     def test_serializer_with_empty_data(self):
-#         serializer = ProviderSerializer(data={})
-#         self.assertFalse(serializer.is_valid())
-#
-#
-# """Testing Customer serializer"""
+
+"""Testing User Serializer"""
+
+class UserSerializerTest(TestCase):
+    User = get_user_model()
+    def setUp(self):
+        self.user_data = {
+            'username': 'testuser',
+            'email': 'test@example.com',
+            'password': 'password1234',
+            'is_provider': False,
+            'is_customer': True,
+            'location': 'Test City'
+        }
+        self.user = User.objects.create_user(**self.user_data)
+
+    def test_valid_user_serializer(self):
+        serializer = UserSerializer(self.user)
+        data = serializer.data
+        self.assertEqual(set(data.keys()), set(['id', 'username', 'email', 'is_provider', 'is_customer', 'location']))
+        self.assertEqual(data['username'], self.user_data['username'])
+        self.assertEqual(data['email'], self.user_data['email'])
+        self.assertEqual(data['is_provider'], self.user_data['is_provider'])
+        self.assertEqual(data['is_customer'], self.user_data['is_customer'])
+        self.assertEqual(data['location'], self.user_data['location'])
+        #TODO: Check password assertion
+        # self.assertTrue(data.check_password(self.user_data['password']))
+
+
+    def test_user_serializer_with_invalid_data(self):
+        self.user_data['email'] = 'invalid-email'
+        serializer = UserSerializer(data=self.user_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('email', serializer.errors)
+
+    def test_create_user_serializer(self):
+        user_count = User.objects.count()
+        serializer = UserSerializer(data=self.user_data)
+        if serializer.is_valid():
+            serializer.save()
+            self.assertEqual(User.objects.count(), user_count + 1)
+
+"""Testing Provider serializer """
+
+
+class ProviderSerializerTest(TestCase):
+    def setUp(self):
+        self.provider_data = {
+            'username': 'provider',
+            'email': 'provider@example.com',
+            'password': 'safe_password123',
+            'location': 'Provider City',
+            'specialty': 'Healthcare',
+            'availability': '{"Monday": "9-5"}',
+            'prices': '{"session": "100"}',
+            'is_approved': True
+        }
+
+    def test_create_provider_with_valid_data(self):
+        serializer = ProviderSerializer(data=self.provider_data)
+        self.assertTrue(serializer.is_valid())
+        provider = serializer.save()
+        print(provider.email)
+        self.assertEqual(User.objects.count(), 1)
+        # TODO: Password hashing assertion failed
+        self.assertTrue(provider.check_password(self.provider_data['password']))
+        self.assertTrue(provider.is_provider)
+        self.assertEqual(provider.specialty, 'Healthcare')
+
+    def test_serializer_with_empty_data(self):
+        serializer = ProviderSerializer(data={})
+        self.assertFalse(serializer.is_valid())
+
+
+"""Testing Customer serializer"""
 # class CustomerSerializerTest(TestCase):
 #     def setUp(self):
 #         self.customer_data = {

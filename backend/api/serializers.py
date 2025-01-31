@@ -26,17 +26,17 @@ class ProviderSerializer(serializers.ModelSerializer):
         return value
 
     #TODO: The create below work for password checks, which to use? Should i provider.save()?
-    def create(self, validated_data):
-        validated_data['is_provider'] = True
-        return User.objects.create_user(**validated_data)
-
     # def create(self, validated_data):
-    #     password = validated_data.pop('password', None)
-    #     provider = Provider.objects.create_user(**validated_data)  # Using create_user instead of direct instantiation
-    #     provider.is_provider = True
-    # TODO: Should save user or should that be done in views.py?
-    #     provider.save()
-    #     return provider
+    #     validated_data['is_provider'] = True
+    #     return User.objects.create_user(**validated_data)
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        provider = Provider(**validated_data)
+        provider.set_password(password)
+        provider.is_provider = True  # Assuming this field is still part of your User model
+        provider.save()
+        return provider
+
 
 class CustomerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
