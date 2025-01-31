@@ -64,62 +64,12 @@ class RegisterCustomerView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# def register_provider(request):
-#     if request.method == 'POST':
-#         form = ProviderSignUpForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             # TODO:Handle post-save actions here, like logging user in or redirecting
-#             # TODO: Change redirect
-#             return redirect('index')
-#     else:
-#         form = ProviderSignUpForm()
-#     return render(request, 'registration/register_provider.html', {'form': form})
-#
-# def register_customer(request):
-#     if request.method == 'POST':
-#         form = CustomerSignUpForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             # TODO:Handle post-save actions here, like logging user in or redirecting
-#             # TODO: Change redirect
-#             return redirect('index')
-#     else:
-#         form = CustomerSignUpForm()
-#     return render(request, 'registration/register_customer.html', {'form': form})
+
 #TODO: Remove index - and ad Home page instead
 def index(request):
     return render(request, 'index.html')
 
 """                           Login and Logout Views                             """
-
-#TODO: HAndle Login TOKENS and REfresh Token
-#
-# class UserLoginView(APIView):
-#     """
-#     Handles user login and returns a JWT token upon successful authentication.
-#     """
-#     permission_classes = [AllowAny]
-#     def post(self, request, *args, **kwargs):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-#
-#         # Authenticate the user
-#         user = authenticate(request, email=email, password=password)
-#         if user is not None:
-#             # Generate JWT tokens
-#             refresh = RefreshToken.for_user(user)
-#             return Response({
-#                 'refresh': str(refresh),
-#                 'access': str(refresh.access_token),
-#                 'user_id': user.id,
-#                 'username': user.username,
-#                 'email': user.email,
-#                 'is_provider': user.is_provider,
-#                 'is_customer': user.is_customer
-#             }, status=status.HTTP_200_OK)
-#         else:
-#             return Response({"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 class UserLoginView(generics.GenericAPIView):
     """
@@ -172,13 +122,12 @@ class UserLogoutView(generics.GenericAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class UserLogoutView(generics.GenericAPIView):
-#     serializer_class = LogoutSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-#
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         if not serializer.is_valid():
-#             return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
-#         serializer.save()
-#         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+"""This view is mainly just to test blaclisted tokens - A view for authorized users only"""
+
+#TODO: Remove view before deployment. OR leave it
+class TestProtectedView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": "You are authenticated!"})
