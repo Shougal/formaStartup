@@ -57,14 +57,15 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     #TODO: Password hashing logic is wrong
     def create(self, validated_data):
-        validated_data['is_customer'] = True
-        return User.objects.create_user(**validated_data)
-        # password = validated_data.pop('password', None)
-        # customer = Customer.objects.create_user(**validated_data)  # Using create_user for proper handling
-        # customer.is_customer = True
-        # # TODO: Should save user or should that be done in views.py?
-        # # customer.save()
-        # return customer
+        password = validated_data.pop('password')
+        customer = Customer(**validated_data)
+        customer.set_password(password)
+        customer.is_customer = True  # Assuming this field is still part of your User model
+        customer.save()
+        return customer
+        # validated_data['is_customer'] = True
+        # return User.objects.create_user(**validated_data)
+
 
 
 
