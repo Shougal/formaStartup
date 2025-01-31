@@ -6,6 +6,8 @@ from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer
 from rest_framework.test import APITestCase
 from rest_framework import status  # Import status module for HTTP response codes
 from rest_framework_simplejwt.tokens import RefreshToken  # Import RefreshToken for token operations
+from django.urls import path, include
+from .views import TestProtectedView
 
 
 # # Create your tests here.
@@ -101,31 +103,49 @@ class AuthTestCase(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # def test_logout(self):
-    #     """
-    #     Ensure we can successfully log out a user and blacklist their token.
-    #     """
-    #     # Log in to get the refresh token
-    #     login_url = reverse('login')
-    #     login_data = {
-    #         'email': 'testuser@example.com',
-    #         'password': 'testpassword123'
-    #     }
-    #     login_response = self.client.post(login_url, login_data, format='json')
-    #     refresh_token = login_response.data['refresh']
-    #
-    #     # Use the refresh token to logout
-    #     logout_url = reverse('logout')
-    #     self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {login_response.data["access"]}')
-    #     logout_data = {'refresh': refresh_token}
-    #     logout_response = self.client.post(logout_url, logout_data, format='json')
-    #     self.assertEqual(logout_response.status_code, status.HTTP_205_RESET_CONTENT)
-    #
-    #     # Attempt to use the blacklisted token
-    #     self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {login_response.data["access"]}')
-    #     post_logout_response = self.client.get(reverse('some_protected_view'))
-    #     self.assertEqual(post_logout_response.status_code, status.HTTP_401_UNAUTHORIZED)
-    #
+    def test_logout(self):
+        """
+        Ensure we can successfully log out a user and blacklist their token.
+        """
+        # Log in to get the refresh token
+        login_url = reverse('login')
+        login_data = {
+            'email': 'testuser@example.com',
+            'password': 'testpassword123'
+        }
+        login_response = self.client.post(login_url, login_data, format='json')
+        refresh_token = login_response.data['refresh']
+
+        # Use the refresh token to logout
+        logout_url = reverse('logout')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {login_response.data["access"]}')
+        logout_data = {'refresh': refresh_token}
+        logout_response = self.client.post(logout_url, logout_data, format='json')
+        self.assertEqual(logout_response.status_code, status.HTTP_205_RESET_CONTENT)
+
+        """Attempting to test blacklisted tokens"""
+        protected_url = reverse('test-protected')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer{login_response.data["access"]}')
+        protected_response = self.client.get(protected_url)
+        self.assertEqual(protected_response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_refresh_token(self):
+        """
+        Ensure refresh token can be used to get a new access token.
+        """
+        login_url = reverse('login')
+        login_data = {
+            'email': 'testuser@example.com',
+            'password': 'testpassword123'
+        }
+        login_response = self.client.post(login_url, login_data, format='json')
+        refresh_url = reverse('refresh')
+        refresh_data = {'refresh': login_response.data['refresh']}
+        refresh_response = self.client.post(refresh_url, refresh_data, format='json')
+        self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in refresh_response.data)
+
+
 
 """                         Testing Serializers.py                              """
 
