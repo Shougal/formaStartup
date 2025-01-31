@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView
+from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView, TestProtectedView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -17,4 +17,5 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('token/', TokenObtainPairView.as_view(), name='get_token'),  # Get access & refresh tokens
     path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),  # Refresh token
+    path('test-protected/', TestProtectedView.as_view(), name='test-protected'),
 ]
