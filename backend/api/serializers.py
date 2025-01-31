@@ -135,13 +135,22 @@ class UserSerializer(serializers.ModelSerializer):
 #             raise serializers.ValidationError({'error': 'Invalid or expired token'})
 
 
+# class LogoutSerializer(serializers.Serializer):
+#     refresh = serializers.CharField()
+#
+#     def save(self, **kwargs):
+#         try:
+#             token = RefreshToken(self.validated_data['refresh'])
+#             token.blacklist()
+#         except TokenError:
+#             raise serializers.ValidationError({'error': 'Invalid or expired token'})
+
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
     def save(self, **kwargs):
         try:
-            token = RefreshToken(self.validated_data['refresh'])
-            token.blacklist()
+            RefreshToken(self.validated_data['refresh']).blacklist()
         except TokenError:
             raise serializers.ValidationError({'error': 'Invalid or expired token'})
 
