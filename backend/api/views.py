@@ -156,13 +156,29 @@ class UserLoginView(generics.GenericAPIView):
         }, status=status.HTTP_200_OK)
 
 
+
 class UserLogoutView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if not serializer.is_valid():
-            return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return Response(status=status.HTTP_205_RESET_CONTENT)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response(status=status.HTTP_205_RESET_CONTENT)
+            except serializers.ValidationError as e:
+                return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class UserLogoutView(generics.GenericAPIView):
+#     serializer_class = LogoutSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+#
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data)
+#         if not serializer.is_valid():
+#             return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+#         serializer.save()
+#         return Response(status=status.HTTP_205_RESET_CONTENT)
