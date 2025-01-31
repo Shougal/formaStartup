@@ -8,8 +8,9 @@ from rest_framework.views import APIView
 from .models import User, Provider, Customer
 from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer
 from rest_framework.response import Response
-from rest_framework import status, permissions, generics
+from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 """         Register Provider View with serializer and email&username validation    """
 
@@ -106,22 +107,23 @@ class UserLoginView(generics.GenericAPIView):
         }, status=status.HTTP_200_OK)
 
 
-
 class UserLogoutView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            try:
-                serializer.save()
-                return Response(status=status.HTTP_205_RESET_CONTENT)
-            except serializers.ValidationError as e:
-                return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()  # This blacklists the token
+            return Response({"message": "Logout successful."}, status=status.HTTP_205_RESET_CONTENT)
+        except serializers.ValidationError as e:
+            return Response({'error': str(e.detail)}, status=status.HTTP_400_BAD_REQUEST)
+        except TokenError as e:
+            # Handle the case where the token is already blacklisted
+            return Response({'error': 'Token is already blacklisted or invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 """This view is mainly just to test blaclisted tokens - A view for authorized users only"""
 
