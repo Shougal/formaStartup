@@ -39,13 +39,13 @@ function Header() {
               <i className="login icon"><FontAwesomeIcon icon={faUser} /></i>
               {showDropdown && (
                 <div className="dropdown-menu">
-                  <Link to="/login" className="dropdown-item">
+                  <Link to="/Login" className="dropdown-item">
                     Login
                   </Link>
-                  <Link to="/register" className="dropdown-item">
+                  <Link to="/RegisterCustomer" className="dropdown-item">
                     Join as Customer
                   </Link>
-                  <Link to="/register-provider" className="dropdown-item">
+                  <Link to="/RegisterProvider" className="dropdown-item">
                     Join as Service Provider
                   </Link>
                 </div>
