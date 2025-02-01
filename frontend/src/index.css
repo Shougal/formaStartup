@@ -10,4 +10,8 @@ body{
     justify-content: center; /* Horizontal alignment */
     min-height: 100vh; /* Full viewport height */
     text-align: center; /* Center text */
+    box-sizing: border-box;
+    /*TODO: adjust padding in hero and forms so smaller screens can see the whole form */
+    /*padding-top: 80px; !* Match header height *!*/
+    /*padding-bottom: 40px; !* Match footer height *!*/
 }
