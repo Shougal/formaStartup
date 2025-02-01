@@ -1,8 +1,8 @@
-/* Registration Page Styling */
+/* Registration Page Container */
 .register-container {
     font-family: 'Quickstand', sans-serif;
     max-width: 600px;
-    margin: 50px auto;
+    margin: 0 auto; /* Center horizontally */
     padding: 20px;
     border: 2px solid #d8bfd8;
     border-radius: 20px;
@@ -10,13 +10,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.register-container h2 {
-    font-size: x-large;
-    color: #d8bfd8;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
+/* Responsive form inputs */
 .register-container input,
 .register-container textarea {
     width: 100%;
@@ -27,6 +21,7 @@
     background-color: #e6e6fa;
 }
 
+/* Focus states */
 .register-container input:focus,
 .register-container textarea:focus {
     outline: none;
@@ -34,6 +29,7 @@
     box-shadow: 0 0 5px rgba(216, 191, 216, 0.5);
 }
 
+/* Button styling */
 .register-container button {
     width: 100%;
     padding: 10px;
@@ -49,4 +45,29 @@
 
 .register-container button:hover {
     background-color: #f2bcbc;
+}
+
+/* Error messages */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Responsive styles for small screens */
+@media (max-width: 768px) {
+    .register-container {
+        width: 90%; /* Take most of the screen width */
+    }
+
+    .hero {
+        min-height: calc(100vh - 100px); /* Adjust for smaller header/footer sizes */
+        padding-top: 60px; /* Match smaller header height */
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        font-size: smaller;
+    }
 }
