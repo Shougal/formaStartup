@@ -53,3 +53,17 @@
 .login-container button:hover {
     background-color: #f2bcbc;
 }
+
+/* Error messages */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .login-container {
+    width: 90%;
+  }
+}
