@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.http import HttpResponse
 
 # from api.views import CustomerRegistration, ProviderRegistration
 #TODO: Remove index
@@ -25,8 +26,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 # THESE VIEWS ARE PREBUILT VIEWS THAT ALLOWS TO ACCESS OUR ACCESS AND REFRESH TOKENS
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+def favicon_view(request):
+    return HttpResponse(status=204)
 
 urlpatterns = [
+    path('favicon.ico', favicon_view),
     path('admin/', admin.site.urls),
     # path('api/token/', TokenObtainPairView.as_view(), name="get_token"),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name="refresh"),
