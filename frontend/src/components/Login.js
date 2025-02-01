@@ -11,6 +11,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error before submitting
     try {
       const data = await login(email, password);
       localStorage.setItem('accessToken', data.access);
@@ -23,31 +24,29 @@ function Login() {
   };
 
   return (
-      <section className={"hero"}>
-        <div className={"div-login"}>
-          <h2>Login</h2>
-          <form onSubmit={handleSubmit}>
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <button type="submit">Login</button>
-          </form>
-          {error && <p style={{color: 'red'}}>{error}</p>}
-        </div>
-
-
-      </section>
+    <section className="hero">
+      <div className="login-container">
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        {error && <p className="error-message">{error}</p>}
+      </div>
+    </section>
   );
 }
 
