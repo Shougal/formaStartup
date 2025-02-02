@@ -8,6 +8,8 @@ from rest_framework import status  # Import status module for HTTP response code
 from rest_framework_simplejwt.tokens import RefreshToken  # Import RefreshToken for token operations
 from django.urls import path, include
 from .views import TestProtectedView
+from rest_framework.test import APIClient
+
 
 
 # # Create your tests here.
@@ -271,5 +273,94 @@ class CustomerSerializerTest(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn('password', serializer.errors)
 
+"""                      Test for approved providers view               """
+class ApprovedProvidersViewTest(TestCase):
+    def setUp(self):
+        """
+        Set up the test environment with users and providers.
+        """
+        # Create a customer user
+        self.customer = User.objects.create_user(
+            username="customer1",
+            email="customer1@example.com",
+            password="password123",
+            is_customer=True
+        )
+
+        # Create an approved provider (Barber)
+        self.provider = Provider.objects.create_user(
+            username="provider1",
+            email="provider1@example.com",
+            password="password123",
+            is_provider=True,
+            specialty="Barber",
+            availability={"Monday": "9:00-17:00"},  # Provide a valid availability value
+            prices={"Haircut": 20, "Shave": 10},  # Provide a valid prices value
+            is_approved=True
+        )
+
+        # Create another approved provider (Photographer)
+        self.photographer = Provider.objects.create_user(
+            username="provider2",
+            email="provider2@example.com",
+            password="password123",
+            is_provider=True,
+            specialty="Photographer",
+            availability={"Monday": "10:00-18:00"},  # Provide a valid availability value
+            prices={"Photo session": 100},  # Provide a valid prices value
+            is_approved=True
+        )
+
+        # Create an unapproved provider
+        self.unapproved_provider = Provider.objects.create_user(
+            username="provider3",
+            email="provider3@example.com",
+            password="password123",
+            is_provider=True,
+            specialty="Barber",
+            availability={"Monday": "8:00-16:00"},  # Provide a valid availability value
+            prices={"Haircut": 15},  # Provide a valid prices value
+            is_approved=False
+        )
+
+        # Set up the client
+        self.client = APIClient()
+
+        # Authenticate as a customer
+        self.client.login(email="customer1@example.com", password="password123")
+
+    # def test_unauthorized_access(self):
+    #     """
+    #     Test that unauthorized access is denied (401).
+    #     """
+    #     self.client.logout()  # Logout to test unauthenticated access
+    #     response = self.client.get("/api/approved-providers/Barber/")
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_approved_barber_providers(self):
+        """
+        Test retrieving approved providers with the specialty 'Barber'.
+        """
+        response = self.client.get("/api/approved-providers/Barber/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)  # Only 1 approved Barber
+        self.assertEqual(response.data[0]['username'], self.provider.username)
+
+    def test_approved_photographer_providers(self):
+        """
+        Test retrieving approved providers with the specialty 'Photographer'.
+        """
+        response = self.client.get("/api/approved-providers/Photographer/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)  # Only 1 approved Photographer
+        self.assertEqual(response.data[0]['username'], self.photographer.username)
+
+    def test_no_unapproved_providers(self):
+        """
+        Test that unapproved providers are not included in the response.
+        """
+        response = self.client.get("/api/approved-providers/Barber/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn(self.unapproved_provider.username, [p['username'] for p in response.data])
 
 
