@@ -31,6 +31,8 @@ function RegisterProvider() {
     }
   };
 
+  /*TODO: Add availability and prices option. Handle JSon. Make specialty drop down menu*/
+
   return (
     <section className="hero">
       <div className="register-container">
