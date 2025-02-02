@@ -133,3 +133,18 @@ class TestProtectedView(APIView):
 
     def get(self, request):
         return Response({"message": "You are authenticated!"})
+
+"""         This class aims to filter approved providers to render in front-end pages       """
+class ApprovedProvidersView(APIView):
+    """
+    Fetch approved providers based on their specialty.
+    """
+
+
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+    def get(self, request, specialty):
+        # Fetch all approved providers with the specified specialty
+        approved_providers = Provider.objects.filter(is_approved=True, specialty=specialty)
+        serializer = ProviderSerializer(approved_providers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
