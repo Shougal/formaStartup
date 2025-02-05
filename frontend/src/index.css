@@ -1,17 +1,41 @@
 /* Body Styling */
 body{
-    background: white
+    background: linear-gradient(to right, #d8bfd8, #e6e6fa);
 }
 /* Global Hero Section Styling */
+/*.hero {*/
+/*    background: linear-gradient(to right, #d8bfd8, #e6e6fa); !* Color gradient *!*/
+/*    display: flex; !* Flexbox for alignment *!*/
+/*    align-items: center; !* Vertical alignment *!*/
+/*    justify-content: center; !* Horizontal alignment *!*/
+/*    min-height: 100vh; !* Full viewport height *!*/
+/*    text-align: center; !* Center text *!*/
+/*    box-sizing: border-box;*/
+/*    !*TODO: adjust padding in hero and forms so smaller screens can see the whole form *!*/
+/*    !*padding-top: 80px; !* Match header height *!*!*/
+/*    !*padding-bottom: 40px; !* Match footer height *!*!*/
+/*}*/
+
 .hero {
-    background: linear-gradient(to right, #d8bfd8, #e6e6fa); /* Color gradient */
-    display: flex; /* Flexbox for alignment */
-    align-items: center; /* Vertical alignment */
-    justify-content: center; /* Horizontal alignment */
-    min-height: 100vh; /* Full viewport height */
-    text-align: center; /* Center text */
+    background: linear-gradient(to right, #d8bfd8, #e6e6fa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 120px); /* Adjusted for header and footer */
+    text-align: center;
     box-sizing: border-box;
-    /*TODO: adjust padding in hero and forms so smaller screens can see the whole form */
-    /*padding-top: 80px; !* Match header height *!*/
-    /*padding-bottom: 40px; !* Match footer height *!*/
+    padding-top: 80px; /* Adjust this value based on your header's height */
+    padding-bottom: 40px; /* Adjust if you have a footer */
+    /*width:100%*/
 }
+main {
+    padding-top: 20px; /* Adjust this value based on your header's actual height */
+    width: 100%;
+}
+
+main, section {
+    width: 100%; /* Full width */
+    max-width: 100%; /* Prevents any constraining of child elements */
+}
+
+
