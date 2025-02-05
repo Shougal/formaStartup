@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchApprovedProviders } from '../api/providers';
-
+import './Barber.css'
 function Barber() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,23 +25,35 @@ function Barber() {
       <main>
         <section className="hero">
           <div className="provider-list">
-            <h1>Approved Barbers</h1>
-            {providers.length > 0 ? (
-                <ul>
-                  {providers.map((provider) => (
-                      <li key={provider.id}>
-                        <h2>{provider.username}</h2>
-                        <p>Location: {provider.location}</p>
-                        <p>Specialty: {provider.specialty}</p>
-                        <p>Prices: {JSON.stringify(provider.prices)}</p>
-                      </li>
-                  ))}
-                </ul>
-            ) : (
-                <p>No approved barbers found.</p>
-            )}
+            {providers.map(provider => (
+                <div className="provider-card" key={provider.id}>
+                  <h2>{`${provider.first_name} ${provider.last_name}`}</h2>
+                  <p><strong>Specialty:</strong> {provider.theme}</p>
+                  <div className="pricing">
+                    <h3>Price:</h3>
+                    <ul>
+                      {Object.entries(provider.prices).map(([key, value], index) => (
+                          <li key={index}>{`${key}: ${value}`}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="availability">
+                    <h3>Availability:</h3>
+                    <ul>
+                      {Object.entries(provider.availability).map(([key, value], index) => (
+                          <li key={index}>{`${key}: ${value}`}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="actions">
+                    <a href={provider.portfolio_link} target="_blank" rel="noopener noreferrer"
+                       className="btn">Portfolio</a>
+                    <a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn">Book
+                      Now</a>
+                  </div>
+                </div>
+            ))}
           </div>
-
         </section>
       </main>
 
