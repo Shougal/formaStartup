@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchApprovedProviders } from '../api/providers';
-import './Barber.css'
+import './providers.css'
 function Barber() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
