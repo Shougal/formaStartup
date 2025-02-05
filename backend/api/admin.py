@@ -6,13 +6,14 @@ from .models import Provider, Customer
 class ProviderAdmin(BaseUserAdmin):
     model = Provider
     fieldsets = BaseUserAdmin.fieldsets + (
-        ('Provider Info', {'fields': ('specialty', 'availability', 'prices', 'is_approved')}),
+        ('Provider Info', {'fields': ('specialty', 'availability', 'prices', 'location',
+                       'is_approved', 'theme', 'img', 'calendly_link', 'portfolio_link')}),
     )
     add_fieldsets = BaseUserAdmin.add_fieldsets + (
         ('Provider Info', {
             'classes': ('wide',),
             'fields': ('username', 'email', 'password1', 'password2', 'specialty', 'availability', 'prices', 'location',
-                       'is_approved'),
+                       'is_approved', 'theme', 'img', 'calendly_link', 'portfolio_link'),
         }),
     )
 

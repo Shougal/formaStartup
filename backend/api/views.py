@@ -44,6 +44,7 @@ class RegisterCustomerView(APIView):
     """
     Handles customer registration.
     """
+    #TODO: handle image uploads
 
     queryset = Customer.objects.all()  # Set the queryset for customers
     serializer_class = CustomerSerializer
