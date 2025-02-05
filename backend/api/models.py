@@ -20,10 +20,18 @@ class User(BaseUser):
 
 # Provider and Customer now extend User (not BaseUser)
 class Provider(User):
+    #TODO: make specialty a drop down menu
     specialty = models.CharField(max_length=100)
     availability = models.JSONField()
     prices = models.JSONField()
     is_approved = models.BooleanField(default=False)
+
+    # Additional info about provider for rendering in html pages:
+    theme = models.TextField(default='No specific theme', blank=True)
+    portfolio_link = models.URLField(max_length=200, blank=False)
+    calendly_link = models.URLField(max_length=200, blank=False)
+    #TODO: Configure images later on
+    img = models.ImageField(upload_to='provider_images/',  null=True, blank=True)
 
     class Meta:
         verbose_name = "Provider"
