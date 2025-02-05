@@ -47,8 +47,8 @@ function Barber() {
                   </div>
                   <div className="actions">
                     <a href={provider.portfolio_link} target="_blank" rel="noopener noreferrer"
-                       className="btn">Portfolio</a>
-                    <a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn">Book
+                       className="btn portfolio-btn">Portfolio</a>
+                    <a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book
                       Now</a>
                   </div>
                 </div>
