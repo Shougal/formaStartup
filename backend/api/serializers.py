@@ -9,11 +9,14 @@ User = get_user_model()
 
 class ProviderSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    img = serializers.ImageField(max_length=None, allow_empty_file=True, use_url=True, required=False)
+
     class Meta:
         model = Provider
         #TODO: Do not include is_approved to fields, should default to false
-        fields = ['id', 'username', 'email', 'location', 'specialty', 'availability', 'prices', 'is_approved', 'password']
+        fields = ['id', 'username', 'email', 'location', 'specialty', 'availability', 'prices', 'is_approved', 'password','first_name', 'last_name', 'theme','portfolio_link', 'calendly_link', 'img' ]
         extra_kwargs = {'password': {'write_only': True}}
+        # 'is_approved': {'default': False, 'read_only': True}
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
