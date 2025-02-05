@@ -15,7 +15,7 @@ body{
 /*    !*padding-top: 80px; !* Match header height *!*!*/
 /*    !*padding-bottom: 40px; !* Match footer height *!*!*/
 /*}*/
-
+/*TODO: Fix header and content under overlapping issue */
 .hero {
     background: linear-gradient(to right, #d8bfd8, #e6e6fa);
     display: flex;
