@@ -11,7 +11,7 @@ function Barber() {
         const data = await fetchApprovedProviders('Barber');
         setProviders(data);
       } catch (error) {
-        console.error('Failed to fetch barbers:', error);
+        console.error('Failed to fetch barbers/hairstylists:', error);
       } finally {
         setLoading(false);
       }
@@ -30,18 +30,18 @@ function Barber() {
                   <h2>{`${provider.first_name} ${provider.last_name}`}</h2>
                   <p><strong>Specialty:</strong> {provider.theme}</p>
                   <div className="pricing">
-                    <h3>Price:</h3>
+                    <h3>Prices:</h3>
                     <ul>
-                      {Object.entries(provider.prices).map(([key, value], index) => (
-                          <li key={index}>{`${key}: ${value}`}</li>
+                      {provider.prices && JSON.parse(provider.prices).map(({session, price}, index) => (
+                          <li key={index}>{`${session}: $${price}`}</li>
                       ))}
                     </ul>
                   </div>
                   <div className="availability">
                     <h3>Availability:</h3>
                     <ul>
-                      {Object.entries(provider.availability).map(([key, value], index) => (
-                          <li key={index}>{`${key}: ${value}`}</li>
+                       {provider.availability && JSON.parse(provider.availability).map((entry, index) => (
+                          <li key={index}>{`${entry.day}: ${entry.slots}`}</li>
                       ))}
                     </ul>
                   </div>
