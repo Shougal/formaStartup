@@ -9,7 +9,7 @@ function RegisterProvider() {
     email: '',
     password: '',
     location: '',
-    specialty: '',
+    specialty: 'NailStylist',  // Default to NailStylist as the initial selected specialty
     availability: '',
     prices: '',
     theme: '',
@@ -102,9 +102,9 @@ function RegisterProvider() {
           <input type="text" name="location" placeholder="Location" onChange={handleChange} required/>
           <label htmlFor ="specialty" > What's your specialty?</label>
           <select name="specialty" id="specialty" onChange={handleChange} required>
-            <option value="Photographer"> Photographer</option>
-            <option value = "Barber"> Barber/HairStylist</option>
             <option value="NailStylist">Nail Stylist</option>
+            <option value="Barber"> Barber/HairStylist</option>
+            <option value="Photographer"> Photographer</option>
           </select>
           <textarea name="theme" placeholder="Is there a specific thing you do within your field?" onChange={handleChange} ></textarea>
           {availability.map((item, index) => (
@@ -136,6 +136,7 @@ function RegisterProvider() {
           ))}
           <button type="button" onClick={addAvailabilityField}>Add More</button>
           {/* Adding pricing field */}
+          {/*TODO: Price field changes numbers sometimes, fix it */}
           {prices.map((price, index) => (
               <div key={index} style={{ marginBottom: '10px' }}>
                 <input
