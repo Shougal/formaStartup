@@ -11,6 +11,7 @@ import JoinUs from "./pages/JoinUs";
 import Login from './components/Login';
 import RegisterCustomer from './components/RegisterCustomer';
 import RegisterProvider from './components/RegisterProvider';
+// import './index.css'
 // import Login from "./pages/Login";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
