@@ -23,6 +23,7 @@ function Footer() {
           </div>
           <div className="col-md-4">
             <form className="footer-form">
+              {/*TODO: send to forma email */}
               <h1>Contact Us</h1>
               <div className="row">
                 <div className="col-md-6 mb-3">
