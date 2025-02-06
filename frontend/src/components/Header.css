@@ -131,6 +131,13 @@ header .header-btn a:active{
       font-size: smaller; /* Further reduce font size */
     }
   }
+
+/*TODO: Fix comming soon pages of header */
+.comming-soon{
+    display: none;
+    /*visibility: hidden;*/
+
+}
   
   
   
