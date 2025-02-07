@@ -8,7 +8,11 @@ import Barber from "./pages/Barber";
 import NailStylist from "./pages/NailStylist";
 import About from "./pages/About";
 import JoinUs from "./pages/JoinUs";
-import Login from "./pages/Login";
+import Login from './components/Login';
+import RegisterCustomer from './components/RegisterCustomer';
+import RegisterProvider from './components/RegisterProvider';
+// import './index.css'
+// import Login from "./pages/Login";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
 
@@ -25,7 +29,10 @@ function App() {
             <Route path="/nail-stylist" element={<NailStylist />} />
             <Route path="/about" element={<About />} />
             <Route path="/join-us" element={<JoinUs />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/RegisterCustomer" element={<RegisterCustomer />} />
+            <Route path="/RegisterProvider" element={<RegisterProvider />} />
+            {/*<Route path="/login" element={<Login />} />*/}
           </Routes>
         </main>
         <Footer />

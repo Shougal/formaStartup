@@ -20,7 +20,7 @@ function Header() {
             <Link to="/barber" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">Barbers</Link>
             <Link to="/nail-stylist" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">Nail Stylists</Link>
             {/*<Link to="/join-us" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">Join Us</Link> */}
-            <Link to="/about" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">About</Link>
+            <Link to="/about" className=" comming-soon btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">About</Link>
             {/*<Link to="/login" className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Log In</Link>*/}
 
 
@@ -39,13 +39,13 @@ function Header() {
               <i className="login icon"><FontAwesomeIcon icon={faUser} /></i>
               {showDropdown && (
                 <div className="dropdown-menu">
-                  <Link to="/login" className="dropdown-item">
+                  <Link to="/Login" className="dropdown-item">
                     Login
                   </Link>
-                  <Link to="/register" className="dropdown-item">
+                  <Link to="/RegisterCustomer" className="dropdown-item">
                     Join as Customer
                   </Link>
-                  <Link to="/register-provider" className="dropdown-item">
+                  <Link to="/RegisterProvider" className="dropdown-item">
                     Join as Service Provider
                   </Link>
                 </div>
