@@ -143,15 +143,7 @@
       <workItem from="1738711128444" duration="38690000" />
       <workItem from="1740593330479" duration="343000" />
       <workItem from="1740593683958" duration="1771000" />
-      <workItem from="1740626464448" duration="908000" />
-    </task>
-    <task id="LOCAL-00035" summary="Removed unnecessary comments">
-      <option name="closed" value="true" />
-      <created>1738347176631</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1738347176631</updated>
+      <workItem from="1740626464448" duration="1218000" />
     </task>
     <task id="LOCAL-00036" summary="Made rotate refresh token and blacklist after rotation set to true to ensure tokens get blacklisted">
       <option name="closed" value="true" />
@@ -537,7 +529,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738907957840</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="added a dash to indicate array">
+      <option name="closed" value="true" />
+      <created>1741459356206</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1741459356207</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
