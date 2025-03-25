@@ -10,6 +10,7 @@ from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer,
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.db.models.functions import Lower
 
 
 """         Register Provider View with serializer and email&username validation    """
@@ -23,13 +24,14 @@ class RegisterProviderView(APIView):
     serializer_class = ProviderSerializer
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        username = request.data.get('username')
+        email = request.data.get('email').lower() #To ensure case-insensitivity
+        username = request.data.get('username').lower()
 
         # Check if email or username already exists
-        if User.objects.filter(email=email).exists():
+        #Made a lower_email instance for runtime only(not stored in db) and set to equal lower email field in db
+        if User.objects.annotate(lower_email=Lower('email')).filter(lower_email=email).exists():
             return Response({"error": "A user with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
-        if User.objects.filter(username=username).exists():
+        if User.objects.annotate(lower_username=Lower('username')).filter(lower_username=username).exists():
             return Response({"error": "A user with this username already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Use the serializer to validate and save the data
@@ -50,13 +52,14 @@ class RegisterCustomerView(APIView):
     serializer_class = CustomerSerializer
     permission_classes = [AllowAny]  # Allow anyone to register
     def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        username = request.data.get('username')
+        email = request.data.get('email').lower()
+        username = request.data.get('username').lower()
 
         # Check if email or username already exists
-        if User.objects.filter(email=email).exists():
+        # Made a lower_email instance for runtime only(not stored in db) and set to equal lower email field in db
+        if User.objects.annotate(lower_email=Lower('email')).filter(lower_email=email).exists():
             return Response({"error": "A user with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
-        if User.objects.filter(username=username).exists():
+        if User.objects.annotate(lower_username=Lower('username')).filter(lower_username=username).exists():
             return Response({"error": "A user with this username already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Use the serializer to validate and save the data
@@ -81,10 +84,10 @@ class UserLoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]  # Anyone can attempt login
 
     def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
+        email = request.data.get('email').lower()
         password = request.data.get('password')
 
-        # Authenticate user
+        # Authenticate user using Django's authenticate function and lowercase email
         user = authenticate(request, email=email, password=password)
 
         if not user:
