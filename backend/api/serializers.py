@@ -19,12 +19,15 @@ class ProviderSerializer(serializers.ModelSerializer):
         # 'is_approved': {'default': False, 'read_only': True}
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        #Used __iexact which is a field lookup in Django that performs a case-insensitive exact match, which means it will find an email regardless of its case.
+        lower_email = value.lower()
+        if User.objects.filter(email__iexact=lower_email).exists():
             raise serializers.ValidationError("A user with this email already exists.")
         return value
 
     def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
+        lower_username = value.lower()
+        if User.objects.filter(username__iexact=lower_username).exists():
             raise serializers.ValidationError("A user with this username already exists.")
         return value
 
@@ -36,7 +39,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         provider = Provider(**validated_data)
         provider.set_password(password)
-        provider.is_provider = True  # Assuming this field is still part of your User model
+        provider.is_provider = True
         provider.save()
         return provider
 
@@ -49,12 +52,14 @@ class CustomerSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        lower_email = value.lower()
+        if User.objects.filter(email__iexact=lower_email).exists():
             raise serializers.ValidationError("A user with this email already exists.")
         return value
 
     def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
+        lower_username = value.lower()
+        if User.objects.filter(username__iexact=lower_username).exists():
             raise serializers.ValidationError("A user with this username already exists.")
         return value
 
