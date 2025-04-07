@@ -1,12 +1,40 @@
-import React, { useState }  from "react";
+import React, { useState, useEffect}  from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
 
 function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
-  return (
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+      const handleStorageChange = () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        setIsLoggedIn(user && user.isLoggedIn);
+      };
+
+      window.addEventListener('storageChange', handleStorageChange);
+
+      // Run once on mount to set initial state
+      handleStorageChange();
+
+      return () => {
+        window.removeEventListener('storageChange', handleStorageChange);
+      };
+    }, []);
+
+
+    const handleLogout = () => {
+      // Clear the local storage or authentication tokens
+      localStorage.removeItem('user');
+      setIsLoggedIn(false); // Update local UI state
+      navigate('/login'); // Redirect to login page after logout
+    };
+    return (
     <header className="header-root">
       <div className="header-block container-fluid ">
         <div className=" header-block-child row align-items-center">
@@ -22,18 +50,18 @@ function Header() {
             {/*<Link to="/join-us" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">Join Us</Link> */}
             <Link to="/about" className=" comming-soon btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">About</Link>
             {/*<Link to="/login" className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Log In</Link>*/}
-
-
-            {/* Login Icon */}
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Logout</button>
+            ) : (
             <div
               className=" dropdown-wrapper btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0"
               onMouseEnter={() => {
                 setShowDropdown(true);
-                console.log("Dropdown visibility:", true);
+
               }}
               onMouseLeave={() => {
                 setShowDropdown(false);
-                console.log("Dropdown visibility:", false);
+
               }}
             >
               <i className="login icon"><FontAwesomeIcon icon={faUser} /></i>
@@ -51,10 +79,7 @@ function Header() {
                 </div>
               )}
             </div>
-            
-
-            
-            
+          )}
 
           </div>
         </div>
@@ -62,5 +87,6 @@ function Header() {
     </header>
   );
 }
+
 
 export default Header;
