@@ -101,6 +101,7 @@ class UserLoginView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         return Response({
+            'is_logged_in': True,
             'refresh': serializer.validated_data['refresh'],
             'access': serializer.validated_data['access'],
             'user_id': user.id,
