@@ -14,12 +14,21 @@ function Login() {
     setError(""); // Reset error before submitting
     try {
       const data = await login(email, password);
-      localStorage.setItem('accessToken', data.access);
-      localStorage.setItem('refreshToken', data.refresh);
+
+      localStorage.setItem('user', JSON.stringify({
+          accessToken: data.access,
+          refreshToken: data.refresh,
+          isLoggedIn: data.is_logged_in,
+          userId: data.user_id,
+          username: data.username
+      }));
       alert('Login successful!');
+
+      window.dispatchEvent(new Event('storageChange'));
       navigate('/'); // Redirect to home
     } catch (err) {
       setError('Invalid email or password');
+
     }
   };
 
