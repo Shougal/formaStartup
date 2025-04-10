@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
+from django.views.decorators.http import require_http_methods
 
 
 """         Register Provider View with serializer and email&username validation    """
@@ -153,3 +154,28 @@ class ApprovedProvidersView(APIView):
         approved_providers = Provider.objects.filter(is_approved=True, specialty=specialty)
         serializer = ProviderSerializer(approved_providers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data = request.data
+        password = data.get('password')
+
+        if not password:
+            return Response({
+                'status': 'error',
+                'message': 'Password is required.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # TODO: add here your password validation logic.
+        user.set_password(password)
+        user.save()
+        return Response({
+            'status': 'success',
+            'message': 'Password changed successfully!'
+        }, status=status.HTTP_200_OK)
+
