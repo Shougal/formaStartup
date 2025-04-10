@@ -51,7 +51,11 @@ function Header() {
             <Link to="/about" className=" comming-soon btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">About</Link>
             {/*<Link to="/login" className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Log In</Link>*/}
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Logout</button>
+                <>
+                  <Link to="/userpage" className="btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0">Your Page</Link>
+                  <button onClick={handleLogout} className="btn btn-light rounded-pill btn-sm bg-transparent border-0">Logout</button>
+                </>
+
             ) : (
             <div
               className=" dropdown-wrapper btn btn-light rounded-pill btn-sm me-3 bg-transparent border-0"
