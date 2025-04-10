@@ -11,6 +11,7 @@ import JoinUs from "./pages/JoinUs";
 import Login from './components/Login';
 import RegisterCustomer from './components/RegisterCustomer';
 import RegisterProvider from './components/RegisterProvider';
+import UserPage from "./pages/UserPage";
 // import './index.css'
 // import Login from "./pages/Login";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/Login" element={<Login />} />
             <Route path="/RegisterCustomer" element={<RegisterCustomer />} />
             <Route path="/RegisterProvider" element={<RegisterProvider />} />
+            <Route path="/userpage" element={<UserPage />} />
             {/*<Route path="/login" element={<Login />} />*/}
           </Routes>
         </main>
