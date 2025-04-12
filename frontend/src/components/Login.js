@@ -20,7 +20,8 @@ function Login() {
           refreshToken: data.refresh,
           isLoggedIn: data.is_logged_in,
           userId: data.user_id,
-          username: data.username
+          username: data.username,
+          email: data.email
       }));
       alert('Login successful!');
 
