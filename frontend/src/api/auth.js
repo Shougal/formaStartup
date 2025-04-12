@@ -17,3 +17,9 @@ export const registerProvider = async (providerData) => {
   const response = await axiosInstance.post('/register/provider/', providerData);
   return response.data;
 };
+
+//Change Password
+export const changePassword = async (newPassword) => {
+  const response = await axiosInstance.post('/change-password/', { password: newPassword });
+  return response.data;
+}
