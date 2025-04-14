@@ -97,11 +97,26 @@ class UserLoginView(generics.GenericAPIView):
         if not user.is_active:
             return Response({"error": "This account is inactive."}, status=status.HTTP_403_FORBIDDEN)
 
+        # Pull full Provider or Customer object (needed for subclass fields)
+        try:
+            if user.is_provider:
+                user = Provider.objects.get(id=user.id)
+            elif user.is_customer:
+                user = Customer.objects.get(id=user.id)
+        except (Provider.DoesNotExist, Customer.DoesNotExist):
+            pass
+
+
         # Generate JWT tokens using TokenObtainPairSerializer
         serializer = self.get_serializer(data={"email": email, "password": password})
         serializer.is_valid(raise_exception=True)
 
-        return Response({
+        # specialty = getattr(user, 'specialty', 'No specialty provided')
+        # portfolio_link = getattr(user, 'portfolio_link', '')
+        # location = getattr(user, 'location', 'No location provided')
+        # prices= getattr(user, 'prices', 'No prices provided')
+
+        response_data ={
             'is_logged_in': True,
             'refresh': serializer.validated_data['refresh'],
             'access': serializer.validated_data['access'],
@@ -109,8 +124,21 @@ class UserLoginView(generics.GenericAPIView):
             'username': user.username,
             'email': user.email,
             'is_provider': user.is_provider,
-            'is_customer': user.is_customer
-        }, status=status.HTTP_200_OK)
+            'is_customer': user.is_customer,
+            'location': user.location,
+        }
+
+        # Conditionally add provider-only fields
+        if user.is_provider:
+            response_data.update({
+                'specialty': user.specialty,
+                'portfolio': user.portfolio_link,
+                'prices': user.prices,
+                'availability': user.availability,
+                'theme': user.theme,
+            })
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class UserLogoutView(generics.GenericAPIView):
