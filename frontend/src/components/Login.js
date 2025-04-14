@@ -15,14 +15,29 @@ function Login() {
     try {
       const data = await login(email, password);
 
+
       localStorage.setItem('user', JSON.stringify({
           accessToken: data.access,
           refreshToken: data.refresh,
           isLoggedIn: data.is_logged_in,
           userId: data.user_id,
           username: data.username,
-          email: data.email
+          email: data.email,
+          isProvider: data.is_provider,
+          isCustomer: data.is_customer,
+          location: data.location,
+          specialty: data.specialty || '',
+          portfolio: data.portfolio || '',
+          prices: data.prices || '',
+          availability: data.availability,
+          theme: data.theme,
       }));
+
+
+
+
+
+
       alert('Login successful!');
 
       window.dispatchEvent(new Event('storageChange'));
