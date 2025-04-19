@@ -14,12 +14,37 @@ function Login() {
     setError(""); // Reset error before submitting
     try {
       const data = await login(email, password);
-      localStorage.setItem('accessToken', data.access);
-      localStorage.setItem('refreshToken', data.refresh);
+
+
+      localStorage.setItem('user', JSON.stringify({
+          accessToken: data.access,
+          refreshToken: data.refresh,
+          isLoggedIn: data.is_logged_in,
+          userId: data.user_id,
+          username: data.username,
+          email: data.email,
+          isProvider: data.is_provider,
+          isCustomer: data.is_customer,
+          location: data.location,
+          specialty: data.specialty || '',
+          portfolio: data.portfolio || '',
+          prices: data.prices || '',
+          availability: data.availability,
+          theme: data.theme,
+      }));
+
+
+
+
+
+
       alert('Login successful!');
+
+      window.dispatchEvent(new Event('storageChange'));
       navigate('/'); // Redirect to home
     } catch (err) {
       setError('Invalid email or password');
+
     }
   };
 

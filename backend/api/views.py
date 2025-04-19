@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
+from django.views.decorators.http import require_http_methods
 
 
 """         Register Provider View with serializer and email&username validation    """
@@ -96,19 +97,48 @@ class UserLoginView(generics.GenericAPIView):
         if not user.is_active:
             return Response({"error": "This account is inactive."}, status=status.HTTP_403_FORBIDDEN)
 
+        # Pull full Provider or Customer object (needed for subclass fields)
+        try:
+            if user.is_provider:
+                user = Provider.objects.get(id=user.id)
+            elif user.is_customer:
+                user = Customer.objects.get(id=user.id)
+        except (Provider.DoesNotExist, Customer.DoesNotExist):
+            pass
+
+
         # Generate JWT tokens using TokenObtainPairSerializer
         serializer = self.get_serializer(data={"email": email, "password": password})
         serializer.is_valid(raise_exception=True)
 
-        return Response({
+        # specialty = getattr(user, 'specialty', 'No specialty provided')
+        # portfolio_link = getattr(user, 'portfolio_link', '')
+        # location = getattr(user, 'location', 'No location provided')
+        # prices= getattr(user, 'prices', 'No prices provided')
+
+        response_data ={
+            'is_logged_in': True,
             'refresh': serializer.validated_data['refresh'],
             'access': serializer.validated_data['access'],
             'user_id': user.id,
             'username': user.username,
             'email': user.email,
             'is_provider': user.is_provider,
-            'is_customer': user.is_customer
-        }, status=status.HTTP_200_OK)
+            'is_customer': user.is_customer,
+            'location': user.location,
+        }
+
+        # Conditionally add provider-only fields
+        if user.is_provider:
+            response_data.update({
+                'specialty': user.specialty,
+                'portfolio': user.portfolio_link,
+                'prices': user.prices,
+                'availability': user.availability,
+                'theme': user.theme,
+            })
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class UserLogoutView(generics.GenericAPIView):
@@ -152,3 +182,28 @@ class ApprovedProvidersView(APIView):
         approved_providers = Provider.objects.filter(is_approved=True, specialty=specialty)
         serializer = ProviderSerializer(approved_providers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data = request.data
+        password = data.get('password')
+
+        if not password:
+            return Response({
+                'status': 'error',
+                'message': 'Password is required.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # TODO: add here your password validation logic.
+        user.set_password(password)
+        user.save()
+        return Response({
+            'status': 'success',
+            'message': 'Password changed successfully!'
+        }, status=status.HTTP_200_OK)
+
