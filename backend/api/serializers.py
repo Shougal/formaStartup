@@ -167,7 +167,8 @@ class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
         fields = ['id', 'provider', 'day', 'time_slots']
-#TODO: Refresh and access token check
+        read_only_fields = ['provider']
+    #TODO: Refresh and access token check
 #
 # class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     """
