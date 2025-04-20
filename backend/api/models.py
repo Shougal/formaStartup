@@ -41,3 +41,11 @@ class Customer(User):
     class Meta:
         verbose_name = "Customer"
         verbose_name_plural = "Customers"
+
+class Availability(models.Model):
+    provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='availabilities')
+    day = models.DateField()  # Stores the date
+    time_slots = models.JSONField(default=list)  # List of times the provider is available
+
+    def __str__(self):
+        return f'Availability for {self.provider.username} on {self.day}'
