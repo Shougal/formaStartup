@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView, TestProtectedView, ApprovedProvidersView, ChangePasswordView
+from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView, TestProtectedView, ApprovedProvidersView, ChangePasswordView, AvailabilityList, AvailabilityDetail
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -20,5 +20,7 @@ urlpatterns = [
     path('test-protected/', TestProtectedView.as_view(), name='test-protected'),
     path('approved-providers/<str:specialty>/', ApprovedProvidersView.as_view(), name='approved_providers'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('availability/', AvailabilityList.as_view(), name='availability-list'),
+    path('availability/<int:pk>/', AvailabilityDetail.as_view(), name='availability-detail'),
 
 ]
