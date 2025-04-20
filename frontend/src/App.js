@@ -12,6 +12,9 @@ import Login from './components/Login';
 import RegisterCustomer from './components/RegisterCustomer';
 import RegisterProvider from './components/RegisterProvider';
 import UserPage from "./pages/UserPage";
+import WeekAvailabilityForm from './components/WeekAvailabilityForm';
+
+// import 'bootstrap/dist/css/bootstrap.min.css';
 // import './index.css'
 // import Login from "./pages/Login";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -34,6 +37,8 @@ function App() {
             <Route path="/RegisterCustomer" element={<RegisterCustomer />} />
             <Route path="/RegisterProvider" element={<RegisterProvider />} />
             <Route path="/userpage" element={<UserPage />} />
+            <Route path="/set-availability" element={<WeekAvailabilityForm />} />
+
             {/*<Route path="/login" element={<Login />} />*/}
           </Routes>
         </main>
