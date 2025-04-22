@@ -159,6 +159,23 @@ function UserPage() {
                 </div>
               </>
           )}
+          {userData.isCustomer && (
+          <div className="mb-3 p-3 rounded" style={{ backgroundColor: 'white', color: 'black' }}>
+            <p><strong>Check your upcoming appointments with our amazing Forma providers:</strong></p>
+            <button className="btn btn-outline-primary" onClick={() => navigate('/appointments')}>
+                  View My Appointments
+            </button>
+          </div>
+          )}
+          {userData.isProvider && (
+            <div className="mb-3 p-3 rounded" style={{ backgroundColor: 'white', color: 'black' }}>
+                <p><strong>Don't forget about your upcoming customers appointments:</strong></p>
+                <button className="btn btn-outline-success" onClick={() => navigate('/appointments')}>
+                    View My Appointments
+                </button>
+            </div>
+          )}
+
 
         </div>
 
