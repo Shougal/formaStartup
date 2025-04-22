@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
-from .models import User, Provider, Customer
-from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer
+from .models import User, Provider, Customer, Availability
+from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -206,4 +206,43 @@ class ChangePasswordView(APIView):
             'status': 'success',
             'message': 'Password changed successfully!'
         }, status=status.HTTP_200_OK)
+
+
+
+class AvailabilityList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        availabilities = Availability.objects.filter(provider=request.user)
+        serializer = AvailabilitySerializer(availabilities, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AvailabilitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(provider=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AvailabilityDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Availability.objects.get(pk=pk, provider=self.request.user)
+        except Availability.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        availability = self.get_object(pk)
+        serializer = AvailabilitySerializer(availability, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        availability = self.get_object(pk)
+        availability.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

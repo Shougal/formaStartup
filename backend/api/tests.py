@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Provider, Customer, User
+from .models import Provider, Customer, User, Availability
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer
@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken  # Import RefreshToken 
 from django.urls import path, include
 from .views import TestProtectedView
 from rest_framework.test import APIClient
+from datetime import date
 
 
 
@@ -207,11 +208,18 @@ class ProviderSerializerTest(TestCase):
             'specialty': 'Healthcare',
             'availability': '{"Monday": "9-5"}',
             'prices': '{"session": "100"}',
-            'is_approved': True
+            'is_approved': True,
+            'portfolio_link': 'https://example.com',
+            'calendly_link': 'https://calendly.com/example',
+            'theme': 'Relaxation',
+            'first_name': 'Jane',
+            'last_name': 'Doe'
         }
 
     def test_create_provider_with_valid_data(self):
         serializer = ProviderSerializer(data=self.provider_data)
+        if not serializer.is_valid():
+            print("Serializer errors:", serializer.errors)
         self.assertTrue(serializer.is_valid())
         provider = serializer.save()
         self.assertEqual(User.objects.count(), 1)
@@ -364,3 +372,89 @@ class ApprovedProvidersViewTest(TestCase):
         self.assertNotIn(self.unapproved_provider.username, [p['username'] for p in response.data])
 
 
+"""                          Testing Availability                """
+class AvailabilityTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Set up data for the whole TestCase
+        User = get_user_model()
+        cls.provider = User.objects.create_user(username='testprovider', email='provider@test.com', password='testpass123')
+        cls.availability1 = Availability.objects.create(
+            provider=cls.provider,
+            day=date.today(),
+            time_slots=['09:00', '10:00', '11:00']
+        )
+
+    def test_availability_creation(self):
+        # Test that the availability was created correctly
+        self.assertEqual(self.availability1.provider, self.provider)
+        self.assertEqual(self.availability1.day, date.today())
+        self.assertIn('10:00', self.availability1.time_slots)
+
+    def test_availability_string_representation(self):
+        # Test the string representation of the Availability model (if defined)
+        self.assertEqual(str(self.availability1), f'Availability for {self.provider.username} on {self.availability1.day}')
+
+    def test_update_availability(self):
+        # Test updating the availability
+        self.availability1.time_slots.append('12:00')
+        self.availability1.save()
+        self.assertIn('12:00', self.availability1.time_slots)
+
+    def test_delete_availability(self):
+        # Test deleting an availability
+        availability_id = self.availability1.id
+        self.availability1.delete()
+        with self.assertRaises(Availability.DoesNotExist):
+            Availability.objects.get(id=availability_id)
+
+"""Testing updating and deleting multiple time slots/days for multiple users and their availability"""
+class ProviderAvailabilityMultiTests(TestCase):
+    def setUp(self):
+        # Create multiple providers with different availabilities
+        self.provider1 = Provider.objects.create(
+            username='provider1',
+            email='provider1@example.com',
+            specialty='Massage',
+            prices={'session1': 150},
+            availability={'2023-05-20': ['10:00', '11:00'], '2023-05-21': ['12:00', '13:00']}
+        )
+
+        self.provider2 = Provider.objects.create(
+            username='provider2',
+            email='provider2@example.com',
+            specialty='Yoga',
+            prices={'session1': 100},
+            availability={'2023-05-20': ['14:00', '15:00'], '2023-05-22': ['16:00', '17:00']}
+        )
+
+    def test_update_availability(self):
+        # Update availability for provider1 and check it doesn't affect provider2
+        self.provider1.availability['2023-05-20'].append('12:00')
+        self.provider1.save()
+
+        updated_provider1 = Provider.objects.get(username='provider1')
+        updated_provider2 = Provider.objects.get(username='provider2')
+
+        self.assertIn('12:00', updated_provider1.availability['2023-05-20'])
+        self.assertNotIn('12:00', updated_provider2.availability['2023-05-20'])
+
+    def test_delete_time_slot(self):
+        # Delete a time slot from provider1 and check it doesn't affect provider2
+        self.provider1.availability['2023-05-20'].remove('10:00')
+        self.provider1.save()
+
+        updated_provider1 = Provider.objects.get(username='provider1')
+        updated_provider2 = Provider.objects.get(username='provider2')
+
+        self.assertNotIn('10:00', updated_provider1.availability['2023-05-20'])
+        self.assertEqual(['14:00', '15:00'], updated_provider2.availability['2023-05-20'])
+
+    def test_isolation_of_providers(self):
+        # Verify each provider's availability is independent
+        availability1 = self.provider1.availability
+        availability2 = self.provider2.availability
+
+        self.assertNotEqual(availability1, availability2)
+        self.assertTrue('2023-05-21' in availability1)
+        self.assertTrue('2023-05-22' in availability2)
