@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { fetchApprovedProviders } from '../api/providers';
 import './providers.css'
+import { useNavigate } from 'react-router-dom';
+
 function NailStylist() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProviders = async () => {
@@ -48,8 +51,18 @@ function NailStylist() {
                   <div className="actions">
                     <a href={provider.portfolio_link} target="_blank" rel="noopener noreferrer"
                        className="btn portfolio-btn">Portfolio</a>
-                    <a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book
-                      Now</a>
+                    {/*<a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book*/}
+                    {/*  Now</a>*/}
+                    <button
+                        className="btn book-btn"
+                        onClick={() =>
+                            navigate(`/availability/provider/${provider.id}`, {
+                              state: {name: `${provider.first_name} ${provider.last_name}`}
+                            })
+                        }
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
             ))}
