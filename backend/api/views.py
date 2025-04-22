@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 
@@ -246,3 +247,13 @@ class AvailabilityDetail(APIView):
         availability.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+class ProviderAvailabilityView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, provider_id):
+        provider = get_object_or_404(User, pk=provider_id, is_provider=True)
+        availabilities = Availability.objects.filter(provider=provider)
+        serializer = AvailabilitySerializer(availabilities, many=True)
+        return Response(serializer.data)
