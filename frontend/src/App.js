@@ -13,6 +13,7 @@ import RegisterCustomer from './components/RegisterCustomer';
 import RegisterProvider from './components/RegisterProvider';
 import UserPage from "./pages/UserPage";
 import WeekAvailabilityForm from './components/WeekAvailabilityForm';
+import ProviderAvailabilityPage from "./components/ProviderAvailabilityPage";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './index.css'
@@ -38,7 +39,7 @@ function App() {
             <Route path="/RegisterProvider" element={<RegisterProvider />} />
             <Route path="/userpage" element={<UserPage />} />
             <Route path="/set-availability" element={<WeekAvailabilityForm />} />
-
+            <Route path="/availability/provider/:providerId" element={<ProviderAvailabilityPage />} />
             {/*<Route path="/login" element={<Login />} />*/}
           </Routes>
         </main>
