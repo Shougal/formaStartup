@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from .models import Provider, Customer
+from .models import Provider, Customer, Availability
 
 class ProviderAdmin(BaseUserAdmin):
     model = Provider
@@ -40,3 +40,11 @@ admin.site.register(Customer, CustomerAdmin)
 
 # Hide Groups from the admin panel
 admin.site.unregister(Group)
+
+# Register availability in admin page
+class AvailabilityAdmin(admin.ModelAdmin):
+    list_display = ('provider', 'day', 'time_slots')  # Customize to display these fields in the admin list view
+    list_filter = ('day',)  # Enable filtering by day
+    search_fields = ('provider__username', 'day')  # Enable search by provider's username and day
+
+admin.site.register(Availability, AvailabilityAdmin)

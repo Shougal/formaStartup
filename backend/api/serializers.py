@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from .models import User, Provider, Customer
+from .models import User, Provider, Customer, Availability
 
 User = get_user_model()
 
@@ -162,7 +162,13 @@ class LogoutSerializer(serializers.Serializer):
         except TokenError:
             raise serializers.ValidationError({'error': 'Invalid or expired token'})
 
-#TODO: Refresh and access token check
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ['id', 'provider', 'day', 'time_slots']
+        read_only_fields = ['provider']
+    #TODO: Refresh and access token check
 #
 # class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     """
