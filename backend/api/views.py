@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 # from .forms import ProviderSignUpForm, CustomerSignUpForm
@@ -5,8 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
-from .models import User, Provider, Customer, Availability
-from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer
+from .models import User, Provider, Customer, Availability, CustomerAppointment
+from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer, CustomerAppointmentSerializer
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -257,3 +259,43 @@ class ProviderAvailabilityView(APIView):
         availabilities = Availability.objects.filter(provider=provider)
         serializer = AvailabilitySerializer(availabilities, many=True)
         return Response(serializer.data)
+
+class BookAppointmentView(generics.CreateAPIView):
+    queryset = CustomerAppointment.objects.all()
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        provider = serializer.validated_data['provider']
+        date = serializer.validated_data['date']
+        time = serializer.validated_data['time']
+
+        # Find matching availability
+        try:
+            availability = Availability.objects.get(provider=provider, day=date)
+        except Availability.DoesNotExist:
+            raise ValidationError("Provider has no availability for that date.")
+
+        if time.strftime('%H:%M') not in availability.time_slots:
+            raise ValidationError("Time slot not available.")
+
+        # Remove the booked time slot
+        availability.time_slots.remove(time.strftime('%H:%M'))
+        availability.save()
+
+        # Save the appointment
+        serializer.save(customer=self.request.user)
+
+class CustomerAppointmentsList(generics.ListAPIView):
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomerAppointment.objects.filter(customer=self.request.user)
+
+class ProviderAppointmentsList(generics.ListAPIView):
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomerAppointment.objects.filter(provider=self.request.user)
