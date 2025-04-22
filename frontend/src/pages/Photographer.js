@@ -23,6 +23,26 @@ function Photographer() {
 
   if (loading) return <p>Loading...</p>;
 
+  const handleBookNow = (providerId, providerName) => {
+  const storedData = localStorage.getItem('user');
+  if (!storedData) {
+    alert('Please log in to book an appointment.');
+    navigate('/login');
+    return;
+  }
+
+  const userDetails = JSON.parse(storedData);
+  if (!userDetails.isCustomer) {
+    alert('Only customers can book appointments. Please register as a customer.');
+    return;
+  }
+
+  navigate(`/availability/provider/${providerId}`, {
+    state: { name: providerName }
+  });
+};
+
+
   return (
       <main>
         <section className="hero">
@@ -53,11 +73,7 @@ function Photographer() {
                     {/*<a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book Now</a>*/}
                     <button
                         className="btn book-btn"
-                        onClick={() =>
-                            navigate(`/availability/provider/${provider.id}`, {
-                            state: { name: `${provider.first_name} ${provider.last_name}` }
-                             })
-                    }
+                        onClick={() => handleBookNow(provider.id, `${provider.first_name} ${provider.last_name}`)}
                     >
                       Book Now
                     </button>
