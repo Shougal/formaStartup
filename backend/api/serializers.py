@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from .models import User, Provider, Customer, Availability
+from .models import User, Provider, Customer, Availability, CustomerAppointment
 
 User = get_user_model()
 
@@ -168,35 +168,14 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         model = Availability
         fields = ['id', 'provider', 'day', 'time_slots']
         read_only_fields = ['provider']
-    #TODO: Refresh and access token check
-#
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     """
-#     Custom serializer for JWT token creation, including additional user data in the token payload.
-#     """
-#
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#
-#         # Add custom claims
-#         token['is_provider'] = user.is_provider
-#         token['is_customer'] = user.is_customer
-#
-#         return token
-#
-#     def validate(self, attrs):
-#         # The default result (access and refresh tokens)
-#         data = super().validate(attrs)
-#
-#         # Custom data you want to include in the response upon token creation
-#         refresh = self.get_token(self.user)
-#
-#         data['refresh'] = str(refresh)
-#         data['access'] = str(refresh.access_token)
-#         data['is_provider'] = self.user.is_provider
-#         data['is_customer'] = self.user.is_customer
-#         data['username'] = self.user.username
-#         data['email'] = self.user.email
-#
-#         return data
+
+
+class CustomerAppointmentSerializer(serializers.ModelSerializer):
+    customer_name = serializers.CharField(source='customer.username', read_only=True)
+    provider_name = serializers.CharField(source='provider.username', read_only=True)
+
+    class Meta:
+        model = CustomerAppointment
+        fields = ['id', 'customer', 'provider', 'date', 'time', 'customer_name', 'provider_name']
+        read_only_fields = ['customer']
+
