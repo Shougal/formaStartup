@@ -49,3 +49,14 @@ class Availability(models.Model):
 
     def __str__(self):
         return f'Availability for {self.provider.username} on {self.day}'
+
+
+class CustomerAppointment(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_appointments')
+    provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='provider_appointments')
+    date = models.DateField()
+    time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.customer.username} with {self.provider.username} on {self.date} at {self.time}"
