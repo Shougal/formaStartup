@@ -128,30 +128,6 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-""" Logout serializer"""
-# class LogoutSerializer(serializers.Serializer):
-#     refresh = serializers.CharField()
-#
-#     def update(self, attrs):
-#         self.token = attrs['refresh']
-#         return attrs
-#
-#     def save(self, **kwargs):
-#         try:
-#             RefreshToken(self.token).blacklist()
-#         except TokenError:
-#             raise serializers.ValidationError({'error': 'Invalid or expired token'})
-
-
-# class LogoutSerializer(serializers.Serializer):
-#     refresh = serializers.CharField()
-#
-#     def save(self, **kwargs):
-#         try:
-#             token = RefreshToken(self.validated_data['refresh'])
-#             token.blacklist()
-#         except TokenError:
-#             raise serializers.ValidationError({'error': 'Invalid or expired token'})
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
