@@ -15,6 +15,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
+from rest_framework_simplejwt.tokens import  TokenError
 
 
 """         Register Provider View with serializer and email&username validation    """
@@ -114,6 +115,7 @@ class UserLoginView(generics.GenericAPIView):
         serializer = self.get_serializer(data={"email": email, "password": password})
         serializer.is_valid(raise_exception=True)
 
+
         # specialty = getattr(user, 'specialty', 'No specialty provided')
         # portfolio_link = getattr(user, 'portfolio_link', '')
         # location = getattr(user, 'location', 'No location provided')
@@ -162,7 +164,7 @@ class UserLogoutView(generics.GenericAPIView):
         except Exception as e:
             return Response({'error': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-"""This view is mainly just to test blaclisted tokens - A view for authorized users only"""
+"""This view is mainly just to test blacklisted tokens - A view for authorized users only"""
 
 #TODO: Remove view before deployment. OR leave it
 class TestProtectedView(APIView):
