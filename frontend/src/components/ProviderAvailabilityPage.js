@@ -32,15 +32,36 @@ const ProviderAvailabilityPage = () => {
     fetchAvailability();
   }, [providerId]);
 
+  // const toggleSlot = (day, slot) => {
+  //   setSelected(prev => {
+  //     const currentSlots = prev[day] || [];
+  //     const newSlots = currentSlots.includes(slot)
+  //       ? currentSlots.filter(s => s !== slot)
+  //       : [...currentSlots, slot];
+  //     return { ...prev, [day]: newSlots };
+  //   });
+  // };
   const toggleSlot = (day, slot) => {
-    setSelected(prev => {
-      const currentSlots = prev[day] || [];
-      const newSlots = currentSlots.includes(slot)
-        ? currentSlots.filter(s => s !== slot)
-        : [...currentSlots, slot];
-      return { ...prev, [day]: newSlots };
-    });
-  };
+  const currentSlots = selected[day] || [];
+
+  // If the clicked slot is already selected, unselect it
+  if (currentSlots.includes(slot)) {
+    setSelected({});
+    return;
+  }
+
+  // Check if any slot is already selected
+  const hasOtherSlot = Object.keys(selected).some(d => selected[d].length > 0);
+
+  if (hasOtherSlot) {
+    alert('You can only book one appointment at a time. Please deselect the other slot first.');
+    return;
+  }
+
+  // Set the newly selected slot
+  setSelected({ [day]: [slot] });
+};
+
 
   const handleSubmit = async () => {
     const storedData = localStorage.getItem('user');
