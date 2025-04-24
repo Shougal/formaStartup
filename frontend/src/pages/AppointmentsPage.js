@@ -41,16 +41,20 @@ const AppointmentsPage = () => {
           {appointments.length === 0 ? (
             <p>No upcoming appointments yet.</p>
           ) : (
-            <ul>
-              {appointments.map((appt, index) => (
-                <li key={index}>
-                  {moment(appt.date).format('MMMM Do')} at {appt.time} —{' '}
-                  {userData.isCustomer
-                    ? `With ${appt.provider_name}`
-                    : `With ${appt.customer_name}`}
-                </li>
-              ))}
-            </ul>
+              <ul>
+                {appointments.map((appt, index) => {
+                  const combined = moment.utc(`${appt.date}T${appt.time}`);
+                  return (
+                      <li key={index}>
+                        {combined.format('MMMM Do')} at {combined.format('h:mm A')} —{' '}
+                        {userData.isCustomer
+                            ? `With ${appt.provider_name}`
+                            : `With ${appt.customer_name}`}
+                      </li>
+                  );
+                })}
+              </ul>
+
           )}
         </div>
       </section>
