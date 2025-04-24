@@ -63,43 +63,48 @@ const ProviderAvailabilityPage = () => {
 };
 
 
+
   const handleSubmit = async () => {
-    const storedData = localStorage.getItem('user');
-    if (!storedData) {
-      alert('Please log in to book.');
-      navigate('/login');
-      return;
-    }
+  const storedData = localStorage.getItem('user');
+  if (!storedData) {
+    alert('Please log in to book.');
+    navigate('/login');
+    return;
+  }
 
-    const userDetails = JSON.parse(storedData);
-    if (!userDetails.isCustomer) {
-      alert('Only customers can book appointments.');
-      return;
-    }
+  const userDetails = JSON.parse(storedData);
+  if (!userDetails.isCustomer) {
+    alert('Only customers can book appointments.');
+    return;
+  }
 
-    const bookings = [];
+  const day = Object.keys(selected)[0];
+  const slots = selected[day];
 
-    for (const day in selected) {
-      const slots = selected[day];
-      for (const time of slots) {
-        bookings.push({ provider: providerId, date: day, time });
-      }
-    }
+  if (!day || !slots || slots.length !== 1) {
+    alert("Please select exactly one time slot.");
+    return;
+  }
 
-    try {
-      await Promise.all(
-        bookings.map(b =>
-          axiosInstance.post('/appointments/book/', b)
-        )
-      );
-      alert(`Booked ${bookings.length} appointment(s) with ${providerName}`);
-      setSelected({});
-      fetchAvailability(); // refresh slots after booking
-    } catch (err) {
-      alert('Some appointments failed to book. Try again.');
-      console.error(err);
-    }
-  };
+  const time = slots[0];
+
+  console.log("Submitting booking:", { provider: providerId, date: day, time });
+
+  try {
+    await axiosInstance.post('/appointments/book/', {
+      provider: providerId,
+      date: day,
+      time
+    });
+    alert(`Booked appointment on ${day} at ${time} with ${providerName}`);
+    setSelected({});
+    fetchAvailability();
+  } catch (err) {
+    alert("Failed to book appointment. Please try again.");
+    console.error(err);
+  }
+};
+
 
   if (loading) return <p>Loading availability...</p>;
 
