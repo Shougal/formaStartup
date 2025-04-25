@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+import dj_database_url
 
 load_dotenv() # This loads an environment file so we can use that to have credentials for the database
 
@@ -28,18 +29,27 @@ AUTH_USER_MODEL = 'api.User'
 
 #TODO: Ensure security key is kept secret and is not exposed in codebase
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0ps1ba&to2jzzyvp@6&fb9pqs1uk14pob^7i4&)5=6y@%n!s)#'
+# SECRET_KEY = 'django-insecure-0ps1ba&to2jzzyvp@6&fb9pqs1uk14pob^7i4&)5=6y@%n!s)#'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-dev-key")
 
 
 #TODO: Turn off debug upon production
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+DEBUG = os.environ.get("ENVIRONMENT") != "production"
+
 
 # Allowing all hosts initially to not get errors when deploring the app
 
 #TODO: allow specific hosts after you finish the project:
 
-ALLOWED_HOSTS = ["*"] # Allows any host to host this django project
+# ALLOWED_HOSTS = ["*"] # Allows any host to host this django project
+
+# Hosts
+if os.environ.get("ENVIRONMENT") == "production":
+    ALLOWED_HOSTS = ["forma-app.herokuapp.com"]
+else:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Below are configuration for the jwt tokens to work properly
 
@@ -118,6 +128,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -153,12 +164,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 #TODO: for production, you might want to switch to a more robust database system like PostgreSQL
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+if os.environ.get("ENVIRONMENT") == "production":
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 #TODO: Configure email settings
 
@@ -196,7 +218,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # BASE_DIR refers to outer backend/
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
