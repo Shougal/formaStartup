@@ -8,6 +8,7 @@ function RegisterCustomer() {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     location: '',
   });
   const [error, setError] = useState('');
@@ -19,8 +20,20 @@ function RegisterCustomer() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  const { confirmPassword, ...dataToSubmit } = formData;
+
     try {
-      await registerCustomer(formData);
+      await registerCustomer({
+        ...dataToSubmit,
+        email: dataToSubmit.email.toLowerCase(),
+        username: dataToSubmit.username.toLowerCase(),
+      });
+
       alert('Customer registered successfully!');
       navigate('/login'); // Redirect to login
     } catch (err) {
@@ -33,10 +46,18 @@ function RegisterCustomer() {
       <div className="register-container">
         <h2>Join as a Customer</h2>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-          <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-          <input type="text" name="location" placeholder="Location" onChange={handleChange} required />
+          <input type="text" name="username" placeholder="Username" onChange={handleChange} required/>
+          <input type="email" name="email" placeholder="Email" onChange={handleChange} required/>
+          <input type="password" name="password" placeholder="Password" onChange={handleChange} required/>
+          <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              onChange={handleChange}
+              required
+          />
+
+          <input type="text" name="location" placeholder="Location" onChange={handleChange} required/>
           <button type="submit">Register</button>
         </form>
         {error && <p className="error-message">{error}</p>}

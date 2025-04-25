@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { fetchApprovedProviders } from '../api/providers';
 import './providers.css'
+import { useNavigate } from 'react-router-dom';
+
 function Barber() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProviders = async () => {
@@ -20,6 +23,25 @@ function Barber() {
   }, []);
 
   if (loading) return <p>Loading...</p>;
+
+  const handleBookNow = (providerId, providerName) => {
+  const storedData = localStorage.getItem('user');
+  if (!storedData) {
+    alert('Please log in to book an appointment.');
+    navigate('/login');
+    return;
+  }
+
+  const userDetails = JSON.parse(storedData);
+  if (!userDetails.isCustomer) {
+    alert('Only customers can book appointments. Please register as a customer.');
+    return;
+  }
+
+  navigate(`/availability/provider/${providerId}`, {
+    state: { name: providerName }
+  });
+};
 
   return (
       <main>
@@ -48,8 +70,14 @@ function Barber() {
                   <div className="actions">
                     <a href={provider.portfolio_link} target="_blank" rel="noopener noreferrer"
                        className="btn portfolio-btn">Portfolio</a>
-                    <a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book
-                      Now</a>
+                    {/*<a href={provider.calendly_link} target="_blank" rel="noopener noreferrer" className="btn book-btn">Book*/}
+                    {/*  Now</a>*/}
+                    <button
+                        className="btn book-btn"
+                        onClick={() => handleBookNow(provider.id, `${provider.first_name} ${provider.last_name}`)}
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
             ))}

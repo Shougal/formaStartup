@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 # from .forms import ProviderSignUpForm, CustomerSignUpForm
@@ -5,13 +7,15 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
-from .models import User, Provider, Customer, Availability
-from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer
+from .models import User, Provider, Customer, Availability, CustomerAppointment
+from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer, CustomerAppointmentSerializer
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
+from rest_framework_simplejwt.tokens import  TokenError
 
 
 """         Register Provider View with serializer and email&username validation    """
@@ -111,6 +115,7 @@ class UserLoginView(generics.GenericAPIView):
         serializer = self.get_serializer(data={"email": email, "password": password})
         serializer.is_valid(raise_exception=True)
 
+
         # specialty = getattr(user, 'specialty', 'No specialty provided')
         # portfolio_link = getattr(user, 'portfolio_link', '')
         # location = getattr(user, 'location', 'No location provided')
@@ -159,7 +164,7 @@ class UserLogoutView(generics.GenericAPIView):
         except Exception as e:
             return Response({'error': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-"""This view is mainly just to test blaclisted tokens - A view for authorized users only"""
+"""This view is mainly just to test blacklisted tokens - A view for authorized users only"""
 
 #TODO: Remove view before deployment. OR leave it
 class TestProtectedView(APIView):
@@ -246,3 +251,53 @@ class AvailabilityDetail(APIView):
         availability.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+class ProviderAvailabilityView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, provider_id):
+        provider = get_object_or_404(User, pk=provider_id, is_provider=True)
+        availabilities = Availability.objects.filter(provider=provider)
+        serializer = AvailabilitySerializer(availabilities, many=True)
+        return Response(serializer.data)
+
+class BookAppointmentView(generics.CreateAPIView):
+    queryset = CustomerAppointment.objects.all()
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        provider = serializer.validated_data['provider']
+        date = serializer.validated_data['date']
+        time = serializer.validated_data['time']
+
+        # Find matching availability
+        try:
+            availability = Availability.objects.get(provider=provider, day=date)
+        except Availability.DoesNotExist:
+            raise ValidationError("Provider has no availability for that date.")
+
+        if time.strftime('%H:%M') not in availability.time_slots:
+            raise ValidationError("Time slot not available.")
+
+        # Remove the booked time slot
+        availability.time_slots.remove(time.strftime('%H:%M'))
+        availability.save()
+
+        # Save the appointment
+        serializer.save(customer=self.request.user)
+
+class CustomerAppointmentsList(generics.ListAPIView):
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomerAppointment.objects.filter(customer=self.request.user)
+
+class ProviderAppointmentsList(generics.ListAPIView):
+    serializer_class = CustomerAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomerAppointment.objects.filter(provider=self.request.user)
