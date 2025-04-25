@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerProvider } from '../api/auth';
+import {registerCustomer, registerProvider} from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
@@ -8,6 +8,7 @@ function RegisterProvider() {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     location: '',
     specialty: 'NailStylist',  // Default to NailStylist as the initial selected specialty
     availability: '',
@@ -33,17 +34,28 @@ function RegisterProvider() {
   // Handling formatting availability and prices into JSON before sending them to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
     const submitData = {
         ...formData,
         availability: JSON.stringify(availability),
         prices: JSON.stringify(prices)
     };
+     delete submitData.confirmPassword; // Don't send this to the backend
     try {
-        await registerProvider(submitData);
+        await registerProvider({
+          ...submitData,
+          email: submitData.email.toLowerCase(),
+          username: submitData.username.toLowerCase(),
+        });
+
         alert('Provider registered successfully!');
         navigate('/login');
     } catch (err) {
         setError('Failed to register. Please try again.');
+
     }
 };
 
@@ -99,34 +111,38 @@ function RegisterProvider() {
           <input type="text" name="first_name" placeholder="First name" onChange={handleChange} required/>
           <input type="text" name="last_name" placeholder="Last name" onChange={handleChange} required/>
           <input type="password" name="password" placeholder="Password" onChange={handleChange} required/>
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange}
+                 required/>
+
           <input type="text" name="location" placeholder="Location" onChange={handleChange} required/>
-          <label htmlFor ="specialty" > What's your specialty?</label>
+          <label htmlFor="specialty"> What's your specialty?</label>
           <select name="specialty" id="specialty" onChange={handleChange} required>
             <option value="NailStylist">Nail Stylist</option>
             <option value="Barber"> Barber/HairStylist</option>
             <option value="Photographer"> Photographer</option>
           </select>
-          <textarea name="theme" placeholder="Is there a specific thing you do within your field?" onChange={handleChange} ></textarea>
+          <textarea name="theme" placeholder="Is there a specific thing you do within your field?"
+                    onChange={handleChange}></textarea>
           {availability.map((item, index) => (
-              <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                <label style={{ marginRight: '5px' }}>
+              <div key={index} style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
+                <label style={{marginRight: '5px'}}>
                   Available Days:
                   <input
                       type="text"
                       placeholder="Ex:Mon-Thrs"
                       value={item.day}
                       onChange={(e) => handleAvailabilityChange(index, 'day', e.target.value)}
-                      style={{ marginLeft: '5px' }}
+                      style={{marginLeft: '5px'}}
                   />
                 </label>
-                <label style={{ marginRight: '5px' }}>
+                <label style={{marginRight: '5px'}}>
                   Time Slots:
                   <input
                       type="text"
                       placeholder="Slots (e.g., 9:00 AM - 5:00 PM)"
                       value={item.slots}
                       onChange={(e) => handleAvailabilityChange(index, 'slots', e.target.value)}
-                      style={{ marginLeft: '5px' }}
+                      style={{marginLeft: '5px'}}
                   />
                 </label>
                 {index > 0 && (
@@ -138,13 +154,13 @@ function RegisterProvider() {
           {/* Adding pricing field */}
           {/*TODO: Price field changes numbers sometimes, fix it */}
           {prices.map((price, index) => (
-              <div key={index} style={{ marginBottom: '10px' }}>
+              <div key={index} style={{marginBottom: '10px'}}>
                 <input
                     type="text"
                     placeholder="Session, `ex: 1 person or 1 hour:"
                     value={price.session}
                     onChange={(e) => handlePricesChange(index, 'session', e.target.value)}
-                    style={{ marginRight: '5px' }}
+                    style={{marginRight: '5px'}}
                 />
                 <input
                     type="number"  // Set input type to number to restrict input to numerical values
@@ -160,8 +176,10 @@ function RegisterProvider() {
           <button type="button" onClick={addPriceField}>Add Price Tier</button>
           {/*TODO: Handle image uploads */}
           {/*<input type="file" name="img" placeholder="An optional image to be displayed of you in our website" onChange={handleChange}/>*/}
-          <input type ="url" name="portfolio_link" placeholder="Portfolio link, ex: instagram profile page link" onChange={handleChange} required/>
-          <input type="url" name="calendly_link" placeholder="Please add link to your calendly schedule" onChange={handleChange} required/>
+          <input type="url" name="portfolio_link" placeholder="Portfolio link, ex: instagram profile page link"
+                 onChange={handleChange} required/>
+          <input type="url" name="calendly_link" placeholder="Please add link to your calendly schedule"
+                 onChange={handleChange} required/>
 
           <button type="submit">Register</button>
         </form>

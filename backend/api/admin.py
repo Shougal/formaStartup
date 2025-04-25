@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from .models import Provider, Customer, Availability
+from .models import Provider, Customer, Availability, CustomerAppointment
 
 class ProviderAdmin(BaseUserAdmin):
     model = Provider
@@ -48,3 +48,12 @@ class AvailabilityAdmin(admin.ModelAdmin):
     search_fields = ('provider__username', 'day')  # Enable search by provider's username and day
 
 admin.site.register(Availability, AvailabilityAdmin)
+
+
+class CustomerAppointmentAdmin(admin.ModelAdmin):
+    list_display = ('customer', 'provider', 'date', 'time', 'created_at')
+    list_filter = ('provider', 'customer', 'date')
+    search_fields = ('customer__username', 'provider__username')
+
+
+admin.site.register(CustomerAppointment, CustomerAppointmentAdmin)

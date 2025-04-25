@@ -13,7 +13,8 @@ function Login() {
     e.preventDefault();
     setError(""); // Reset error before submitting
     try {
-      const data = await login(email, password);
+      const data = await login(email.toLowerCase(), password);
+
 
 
       localStorage.setItem('user', JSON.stringify({
