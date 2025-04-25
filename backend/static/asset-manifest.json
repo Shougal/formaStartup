@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2fb880f1.css",
+    "main.js": "/static/js/main.0dde6ec3.js",
+    "static/media/FormaLogo.jpeg": "/static/media/FormaLogo.ba2e860bbd5e88c842cc.jpeg",
+    "index.html": "/index.html",
+    "main.2fb880f1.css.map": "/static/css/main.2fb880f1.css.map",
+    "main.0dde6ec3.js.map": "/static/js/main.0dde6ec3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2fb880f1.css",
+    "static/js/main.0dde6ec3.js"
+  ]
+}

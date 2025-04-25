@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="ignoring .idea folders" />
+    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="reformmated how booking times should look like in customer page for ease of understanding" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +21,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="bookings" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,24 +46,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Python.tests.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/shougalharbi/Desktop/work/Forma&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.tests.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "herokuDeploy",
+    "last_opened_file_path": "/Users/shougalharbi/Desktop/work/Forma",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend" />
@@ -145,6 +145,14 @@
       <workItem from="1740593683958" duration="1771000" />
       <workItem from="1740626464448" duration="908000" />
       <workItem from="1742931629315" duration="7363000" />
+    </task>
+    <task id="LOCAL-00036" summary="Made rotate refresh token and blacklist after rotation set to true to ensure tokens get blacklisted">
+      <option name="closed" value="true" />
+      <created>1738347216590</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1738347216590</updated>
     </task>
     <task id="LOCAL-00037" summary="tested blacklisted tokens for logout. Tests passed.">
       <option name="closed" value="true" />
@@ -530,15 +538,7 @@
       <option name="project" value="LOCAL" />
       <updated>1742937326895</updated>
     </task>
-    <task id="LOCAL-00085" summary="ignoring .idea folders">
-      <option name="closed" value="true" />
-      <created>1745595891149</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
-      <option name="project" value="LOCAL" />
-      <updated>1745595891149</updated>
-    </task>
-    <option name="localTasksCounter" value="86" />
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -583,6 +583,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="Made a ProviderAvailabilityPage.js to fetch all availability times of a certain provider" />
     <MESSAGE value="route to fetch provider availability using index" />
     <MESSAGE value="Backend view to view Provider Availability using pk" />
     <MESSAGE value="Linked book button to availability of provider view for all provider pages" />
@@ -607,23 +608,6 @@
     <MESSAGE value="Allow the booking of one time slot at a time, no bulk bookings" />
     <MESSAGE value="updated handlesubmit in providerAvailability to only support booking one slot at a time, send one request only" />
     <MESSAGE value="reformmated how booking times should look like in customer page for ease of understanding" />
-    <MESSAGE value="ignoring .idea folders" />
-    <option name="LAST_COMMIT_MESSAGE" value="ignoring .idea folders" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/api/views.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/api/views.py</url>
-          <line>72</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <option name="LAST_COMMIT_MESSAGE" value="reformmated how booking times should look like in customer page for ease of understanding" />
   </component>
 </project>
