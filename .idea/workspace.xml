@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="reformmated how booking times should look like in customer page for ease of understanding" />
+    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="ignoring .idea folders" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -145,14 +145,6 @@
       <workItem from="1740593683958" duration="1771000" />
       <workItem from="1740626464448" duration="908000" />
       <workItem from="1742931629315" duration="7363000" />
-    </task>
-    <task id="LOCAL-00036" summary="Made rotate refresh token and blacklist after rotation set to true to ensure tokens get blacklisted">
-      <option name="closed" value="true" />
-      <created>1738347216590</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1738347216590</updated>
     </task>
     <task id="LOCAL-00037" summary="tested blacklisted tokens for logout. Tests passed.">
       <option name="closed" value="true" />
@@ -538,7 +530,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742937326895</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="ignoring .idea folders">
+      <option name="closed" value="true" />
+      <created>1745595891149</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1745595891149</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -583,7 +583,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Made a ProviderAvailabilityPage.js to fetch all availability times of a certain provider" />
     <MESSAGE value="route to fetch provider availability using index" />
     <MESSAGE value="Backend view to view Provider Availability using pk" />
     <MESSAGE value="Linked book button to availability of provider view for all provider pages" />
@@ -608,19 +607,20 @@
     <MESSAGE value="Allow the booking of one time slot at a time, no bulk bookings" />
     <MESSAGE value="updated handlesubmit in providerAvailability to only support booking one slot at a time, send one request only" />
     <MESSAGE value="reformmated how booking times should look like in customer page for ease of understanding" />
-    <option name="LAST_COMMIT_MESSAGE" value="reformmated how booking times should look like in customer page for ease of understanding" />
+    <MESSAGE value="ignoring .idea folders" />
+    <option name="LAST_COMMIT_MESSAGE" value="ignoring .idea folders" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/backend/api/views.py</url>
-          <line>38</line>
+          <line>42</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/backend/api/views.py</url>
-          <line>68</line>
+          <line>72</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
