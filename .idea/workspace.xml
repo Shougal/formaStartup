@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="Made and ensured that SignUp and Login functionalities are case-insensitive with username and email auth check.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="7f87afcb-a08e-4d63-ad34-c88c28cb6364" name="Changes" comment="reformmated how booking times should look like in customer page for ease of understanding" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +21,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="django-react-integration" />
+        <entry key="$PROJECT_DIR$" value="bookings" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -585,32 +583,32 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="providers.js aims to call the axios instance and fetch  approved providers from AprrovedProvidersView in the backend" />
-    <MESSAGE value="Barber.js fetches data for approved barbers by calling providers.js and renders the Barber page to reflect the data dynamically" />
-    <MESSAGE value="Added additional fields to provider models.py" />
-    <MESSAGE value="Added additional fields to ProviderSerializer" />
-    <MESSAGE value="updated admin view to include additional provider fields in its view" />
-    <MESSAGE value="Rendered only set information to be visible in barber page for approved providers" />
-    <MESSAGE value="adjusted hero className, main and section elements to have 100% width and added a padding for main element to set it apart from header. Fixed hero overflowing under header." />
-    <MESSAGE value="Fixed header.css to include a high z index to keep it above other content" />
-    <MESSAGE value="adjusted barber.css for page layout and width issues" />
-    <MESSAGE value="Styled providers.css" />
-    <MESSAGE value="TODO: Fix header and content overlap issue" />
-    <MESSAGE value="imported providers.css" />
-    <MESSAGE value="Added the same code and style of Barber.js to NailStylist.js and Photographer.js" />
-    <MESSAGE value="Handled registering a provider by providing function to convert availability and prices into JSON before posting to the backend. Finished form for provider registration" />
-    <MESSAGE value="Updated comments" />
-    <MESSAGE value="Handled correct rendering of JSON availability and prices objects from backend as a list in the front end" />
-    <MESSAGE value="Set a default specialty to nail stylists to manage backend api error" />
-    <MESSAGE value="Deleted Barber.css" />
-    <MESSAGE value="Made about page not visible (coming soon)" />
-    <MESSAGE value="TODO comment for footer form. Send to forma email" />
-    <MESSAGE value="Sent Contact us form in the footer to Forma email upon submit" />
-    <MESSAGE value="renamed procfile to Procfile" />
-    <MESSAGE value="added a dash to indicate array" />
-    <MESSAGE value="merging into main" />
-    <MESSAGE value="Made and ensured that SignUp and Login functionalities are case-insensitive with username and email auth check." />
-    <option name="LAST_COMMIT_MESSAGE" value="Made and ensured that SignUp and Login functionalities are case-insensitive with username and email auth check." />
+    <MESSAGE value="Made a ProviderAvailabilityPage.js to fetch all availability times of a certain provider" />
+    <MESSAGE value="route to fetch provider availability using index" />
+    <MESSAGE value="Backend view to view Provider Availability using pk" />
+    <MESSAGE value="Linked book button to availability of provider view for all provider pages" />
+    <MESSAGE value="added route to availability of provider in App.js" />
+    <MESSAGE value="Enhanced css for provider pages" />
+    <MESSAGE value="Migrations" />
+    <MESSAGE value="Created a customerAppointment model to keep track of customer-provider appointments" />
+    <MESSAGE value="Added BookingView as well as Customer and Provider appointment list" />
+    <MESSAGE value="Created a serializer for customer Appointments" />
+    <MESSAGE value="Added a path to the booking views" />
+    <MESSAGE value="Registered the customerAppointment model in the admin page" />
+    <MESSAGE value="Tested the booking functionality. All tests passed" />
+    <MESSAGE value="Migration for the booking model" />
+    <MESSAGE value="Changed booking button to only show provider availabilities if user is logged in and is registered as a customer, i.e, providers can't book from the same provider account." />
+    <MESSAGE value="Made a ProviderAvailabilityPage.js in which customers can see the specific provider's availability times and book immediatly. If booked, these times will be deleted from provider's current available times" />
+    <MESSAGE value="Made a AppointmentsPage.js that allows the user to check their upcoming appointments." />
+    <MESSAGE value="Added a button in UserPage.js to navigate to appointments based on their registration as of whether they are a customer or a provider" />
+    <MESSAGE value="Added route to Appointments page in App.js" />
+    <MESSAGE value="Deleted logout serializer" />
+    <MESSAGE value="imported TokenError" />
+    <MESSAGE value="Fixed bug in Login.js, RegisterCustomer.js, and RegisterProvider.js by making sure to lowerCase emails in frontend before sending to backend. Also added a confirm password field in registration." />
+    <MESSAGE value="Allow the booking of one time slot at a time, no bulk bookings" />
+    <MESSAGE value="updated handlesubmit in providerAvailability to only support booking one slot at a time, send one request only" />
+    <MESSAGE value="reformmated how booking times should look like in customer page for ease of understanding" />
+    <option name="LAST_COMMIT_MESSAGE" value="reformmated how booking times should look like in customer page for ease of understanding" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

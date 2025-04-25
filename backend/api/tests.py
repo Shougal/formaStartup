@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Provider, Customer, User, Availability
+from .models import Provider, Customer, User, Availability, CustomerAppointment
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer
@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken  # Import RefreshToken 
 from django.urls import path, include
 from .views import TestProtectedView
 from rest_framework.test import APIClient
-from datetime import date
+from datetime import date, time
 
 
 
@@ -458,3 +458,59 @@ class ProviderAvailabilityMultiTests(TestCase):
         self.assertNotEqual(availability1, availability2)
         self.assertTrue('2023-05-21' in availability1)
         self.assertTrue('2023-05-22' in availability2)
+
+"""                                     TESTING BOOKING SYSTEM                                      """
+class AppointmentBookingTests(TestCase):
+
+    def setUp(self):
+        self.provider = User.objects.create_user(
+            username='provider1',
+            email='provider@example.com',
+            password='testpass123',
+            is_provider=True
+        )
+        self.customer = User.objects.create_user(
+            username='customer1',
+            email='customer@example.com',
+            password='testpass123',
+            is_customer=True
+        )
+        self.day = date(2025, 4, 25)
+        self.time_slot = '10:00'
+        self.availability = Availability.objects.create(
+            provider=self.provider,
+            day=self.day,
+            time_slots=['10:00', '11:00']
+        )
+
+    def test_customer_can_book_appointment(self):
+        # Ensure time slot is initially available
+        self.assertIn(self.time_slot, self.availability.time_slots)
+
+        # Book appointment
+        if self.time_slot in self.availability.time_slots:
+            self.availability.time_slots.remove(self.time_slot)
+            self.availability.save()
+
+            appointment = CustomerAppointment.objects.create(
+                customer=self.customer,
+                provider=self.provider,
+                date=self.day,
+                time=time.fromisoformat(self.time_slot)
+            )
+        else:
+            self.fail("Time slot was not available when it should have been.")
+
+        # Confirm the appointment was created
+        self.assertEqual(CustomerAppointment.objects.count(), 1)
+        appt = CustomerAppointment.objects.first()
+        self.assertEqual(appt.customer, self.customer)
+        self.assertEqual(appt.provider, self.provider)
+
+        # Confirm the time slot is removed
+        updated_availability = Availability.objects.get(id=self.availability.id)
+        self.assertNotIn(self.time_slot, updated_availability.time_slots)
+
+        # Confirm provider and customer relations
+        self.assertIn(appt, self.customer.customer_appointments.all())
+        self.assertIn(appt, self.provider.provider_appointments.all())
