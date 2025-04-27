@@ -3,7 +3,7 @@ import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
-
+import {logout} from "../api/auth";
 function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,9 +30,10 @@ function Header() {
 
     const handleLogout = () => {
       // Clear the local storage or authentication tokens
-      localStorage.removeItem('user');
-      setIsLoggedIn(false); // Update local UI state
-      navigate('/login'); // Redirect to login page after logout
+      // localStorage.removeItem('user');
+      // setIsLoggedIn(false); // Update local UI state
+      // navigate('/login'); // Redirect to login page after logout
+        logout();
     };
     return (
     <header className="header-root">
