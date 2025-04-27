@@ -113,7 +113,8 @@ class UserLoginView(generics.GenericAPIView):
 
 
         # Generate JWT tokens using TokenObtainPairSerializer
-        serializer = self.get_serializer(data={"email": email, "password": password})
+        # serializer = self.get_serializer(data={"email": email, "password": password})
+        serializer = self.get_serializer(data={"username": email, "password": password})
         serializer.is_valid(raise_exception=True)
 
 
