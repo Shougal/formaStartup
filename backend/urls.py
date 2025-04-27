@@ -19,6 +19,7 @@ from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.http import HttpResponse
 from django.views.generic import TemplateView
+from django.views.decorators.cache import never_cache
 
 
 # from api.views import CustomerRegistration, ProviderRegistration
@@ -40,5 +41,6 @@ urlpatterns = [
     path('api/auth/', include('rest_framework.urls')),
     path('api/', include('backend.api.urls')),
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
+    path('', never_cache(TemplateView.as_view(template_name="index.html")), name='home'),
     # path('', TemplateView.as_view(template_name="index.html")),
 ]
