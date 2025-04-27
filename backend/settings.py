@@ -46,10 +46,15 @@ DEBUG = os.environ.get("ENVIRONMENT") != "production"
 #TODO: allow specific hosts after you finish the project:
 
 # ALLOWED_HOSTS = ["*"] # Allows any host to host this django project
+# if os.environ.get("ENVIRONMENT") == "production":
+#     ALLOWED_HOSTS = ["forma-app.herokuapp.com"]
+# else:
+#     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 if os.environ.get("ENVIRONMENT") == "production":
-    ALLOWED_HOSTS = ["forma-app.herokuapp.com"]
+    ALLOWED_HOSTS = ["forma-app-b1081cbc4d9c.herokuapp.com"]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
 
 # Below are configuration for the jwt tokens to work properly
 
