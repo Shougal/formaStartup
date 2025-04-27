@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Smart backend baseURL
+const baseURL = window.location.hostname.includes('localhost')
+  ? 'http://127.0.0.1:8000/api'  // Local backend
+  : 'https://forma-app-b1081cbc4d9c.herokuapp.com/api';  // Deployed backend
+
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api', //  backend base URL
+  baseURL: baseURL, //  backend base URL
   headers: {
     'Content-Type': 'application/json',
   },
