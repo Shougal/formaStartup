@@ -16,10 +16,12 @@ from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from rest_framework_simplejwt.tokens import  TokenError
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 """         Register Provider View with serializer and email&username validation    """
-
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterProviderView(APIView):
     """
     Handles provider registration.
@@ -47,6 +49,7 @@ class RegisterProviderView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 """         Customer registration view with serializer and email&username validation"""
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterCustomerView(APIView):
     """
     Handles customer registration.
@@ -78,7 +81,7 @@ class RegisterCustomerView(APIView):
 
 
 """                           Login and Logout Views                             """
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(generics.GenericAPIView):
     """
     Generic Login View for Customers & Providers using GenericAPIView.
