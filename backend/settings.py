@@ -221,6 +221,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://forma-app-b1081cbc4d9c.herokuapp.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -242,5 +247,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #TODO: Allow only a specific origin after you finish the program
 #Typically you should allow a specific origin but for different deployment I will be doing now,
 # I will be allowing all for the moment to not get error
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",   # React dev server default
+    "http://127.0.0.1:3000",
+    "https://forma-app-b1081cbc4d9c.herokuapp.com",
+]
 CORS_ALLOW_CREDENTIALS = True

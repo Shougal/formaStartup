@@ -7,6 +7,7 @@ const baseURL = window.location.hostname.includes('localhost')
 
 const axiosInstance = axios.create({
   baseURL: baseURL, //  backend base URL
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
