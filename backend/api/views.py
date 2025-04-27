@@ -76,8 +76,8 @@ class RegisterCustomerView(APIView):
 
 
 #TODO: Remove index - and ad Home page instead
-def index(request):
-    return render(request, 'index.html')
+# def index(request):
+#     return render(request, 'index.html')
 
 """                           Login and Logout Views                             """
 
