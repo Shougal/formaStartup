@@ -1,5 +1,5 @@
-import axiosInstance from './axios';
-import publicAxiosInstance from './axios';
+import axiosInstance, { publicAxiosInstance } from './axios';
+
 // Login
 export const login = async (email, password) => {
   const response = await publicAxiosInstance.post('/login/', { email, password });
