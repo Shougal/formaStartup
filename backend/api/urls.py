@@ -5,8 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
-    #TODO:Change the following index home page
-    # path('', views.index, name='index'),
+
     # API-based registration
     #TODO: Add name in views.py - meta class
     path('register/provider/', RegisterProviderView.as_view(), name='register_provider'),

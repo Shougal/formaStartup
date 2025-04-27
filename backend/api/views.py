@@ -75,9 +75,7 @@ class RegisterCustomerView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#TODO: Remove index - and ad Home page instead
-# def index(request):
-#     return render(request, 'index.html')
+
 
 """                           Login and Logout Views                             """
 
