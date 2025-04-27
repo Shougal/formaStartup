@@ -5,6 +5,13 @@ const baseURL = window.location.hostname.includes('localhost')
   ? 'http://127.0.0.1:8000/api'  // Local backend
   : 'https://forma-app-b1081cbc4d9c.herokuapp.com/api';  // Deployed backend
 
+const publicAxiosInstance = axios.create({
+  baseURL: baseURL,
+  withCredentials: false, // <-- NO cookies
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 const axiosInstance = axios.create({
   baseURL: baseURL, //  backend base URL
   withCredentials: true,
