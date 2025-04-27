@@ -23,3 +23,12 @@ export const changePassword = async (newPassword) => {
   const response = await axiosInstance.post('/change-password/', { password: newPassword });
   return response.data;
 }
+
+// Logout
+export const logout = () => {
+  localStorage.removeItem('user');
+  window.dispatchEvent(new Event('storageChange'));
+  window.location.href = '/login'; // Force hard refresh to reset memory/cookies
+};
+
+
