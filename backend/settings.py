@@ -51,7 +51,7 @@ DEBUG = os.environ.get("ENVIRONMENT") != "production"
 # else:
 #     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 if os.environ.get("ENVIRONMENT") == "production":
-    ALLOWED_HOSTS = ["forma-app-b1081cbc4d9c.herokuapp.com"]
+    ALLOWED_HOSTS = ["forma-app-b1081cbc4d9c.herokuapp.com", ".herokuapp.com"]
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 else:
