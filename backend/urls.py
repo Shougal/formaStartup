@@ -40,9 +40,6 @@ urlpatterns = [
     #TODO: api-auth?
     path('api/auth/', include('rest_framework.urls')),
     path('api/', include('backend.api.urls')),
-    # path('', TemplateView.as_view(template_name="index.html")),
+
 ]
-# Catch-all to serve the React frontend
-urlpatterns += [
-    path('', never_cache(TemplateView.as_view(template_name="index.html")), name='home'),
-]
+
