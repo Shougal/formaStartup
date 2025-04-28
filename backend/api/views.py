@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 """         Register Provider View with serializer and email&username validation    """
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class RegisterProviderView(APIView):
     """
     Handles provider registration.
@@ -30,6 +30,8 @@ class RegisterProviderView(APIView):
     queryset = Provider.objects.all()  #Set the queryset for providers
     serializer_class = ProviderSerializer
     permission_classes = [AllowAny]
+
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         email = request.data.get('email').lower() #To ensure case-insensitivity
         username = request.data.get('username').lower()
@@ -49,7 +51,7 @@ class RegisterProviderView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 """         Customer registration view with serializer and email&username validation"""
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class RegisterCustomerView(APIView):
     """
     Handles customer registration.
@@ -59,6 +61,8 @@ class RegisterCustomerView(APIView):
     queryset = Customer.objects.all()  # Set the queryset for customers
     serializer_class = CustomerSerializer
     permission_classes = [AllowAny]  # Allow anyone to register
+
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         email = request.data.get('email').lower()
         username = request.data.get('username').lower()
@@ -81,7 +85,7 @@ class RegisterCustomerView(APIView):
 
 
 """                           Login and Logout Views                             """
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(generics.GenericAPIView):
     """
     Generic Login View for Customers & Providers using GenericAPIView.
@@ -89,6 +93,7 @@ class UserLoginView(generics.GenericAPIView):
     serializer_class = TokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]  # Anyone can attempt login
 
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         email = request.data.get('email').lower()
         password = request.data.get('password')
