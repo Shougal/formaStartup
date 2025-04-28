@@ -31,13 +31,41 @@ function RegisterProvider() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const { email, password, confirmPassword } = formData;
+
+    if (!email.toLowerCase().endsWith('@virginia.edu')) {
+      setError('Email must end with @virginia.edu');
+      return false;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must be at least 8 characters, contain at least one uppercase letter and one number.');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+
+    return true;
+  };
+
+
+
   // Handling formatting availability and prices into JSON before sending them to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-     if (formData.password !== formData.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+
+    if (!validateForm()) {
+      return;
+    }
+  //    if (formData.password !== formData.confirmPassword) {
+  //   setError("Passwords do not match");
+  //   return;
+  // }
     const submitData = {
         ...formData,
         availability: JSON.stringify(availability),
