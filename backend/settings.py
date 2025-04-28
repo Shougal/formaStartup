@@ -54,6 +54,11 @@ if os.environ.get("ENVIRONMENT") == "production":
     ALLOWED_HOSTS = ["forma-app-b1081cbc4d9c.herokuapp.com", ".herokuapp.com"]
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = 'None'
+
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
