@@ -18,12 +18,40 @@ function RegisterCustomer() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const { email, password, confirmPassword } = formData;
+
+    // Check email ends with @virginia.edu
+    if (!email.toLowerCase().endsWith('@virginia.edu')) {
+      setError('Email must end with @virginia.edu');
+      return false;
+    }
+
+    // Check password strength
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must be at least 8 characters, contain at least one uppercase letter and one number.');
+      return false;
+    }
+
+    // Check passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-     if (formData.password !== formData.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (!validateForm()) {
+      return;
+    }
+  //    if (formData.password !== formData.confirmPassword) {
+  //   setError("Passwords do not match");
+  //   return;
+  // }
 
   const { confirmPassword, ...dataToSubmit } = formData;
 
