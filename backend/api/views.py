@@ -30,6 +30,7 @@ class RegisterProviderView(APIView):
     queryset = Provider.objects.all()  #Set the queryset for providers
     serializer_class = ProviderSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     @csrf_exempt
     def post(self, request, *args, **kwargs):
@@ -61,7 +62,7 @@ class RegisterCustomerView(APIView):
     queryset = Customer.objects.all()  # Set the queryset for customers
     serializer_class = CustomerSerializer
     permission_classes = [AllowAny]  # Allow anyone to register
-
+    authentication_classes = []
     @csrf_exempt
     def post(self, request, *args, **kwargs):
         email = request.data.get('email').lower()
@@ -92,6 +93,7 @@ class UserLoginView(generics.GenericAPIView):
     """
     serializer_class = TokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]  # Anyone can attempt login
+    authentication_classes = []
 
     @csrf_exempt
     def post(self, request, *args, **kwargs):
