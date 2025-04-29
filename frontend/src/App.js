@@ -19,8 +19,8 @@ import AppointmentsPage from "./pages/AppointmentsPage";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './index.css'
 // import Login from "./pages/Login";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUser} from '@fortawesome/free-solid-svg-icons';
+
+
 
 function App() {
   return (

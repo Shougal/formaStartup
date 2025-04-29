@@ -1,13 +1,13 @@
 import React, { useState, useEffect}  from "react";
 import "./Header.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
 import {logout} from "../api/auth";
 function Header() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
     useEffect(() => {
