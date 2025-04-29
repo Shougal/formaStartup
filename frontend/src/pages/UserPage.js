@@ -140,7 +140,7 @@ function UserPage() {
 
                 {/* Availability Button */}
                 <div className="mb-3 p-3 rounded" style={{backgroundColor: 'white', color: 'black'}}>
-                  <p><strong>Set this week's Availability:</strong></p>
+                  <p><strong>Set this week&apos;s Availability:</strong></p>
                   <button className="btn btn-primary" onClick={() => navigate('/set-availability')}>
                     Set Availability
                   </button>
@@ -169,7 +169,7 @@ function UserPage() {
           )}
           {userData.isProvider && (
             <div className="mb-3 p-3 rounded" style={{ backgroundColor: 'white', color: 'black' }}>
-                <p><strong>Don't forget about your upcoming customers appointments:</strong></p>
+                <p><strong>Don&apos;t forget about your upcoming customers appointments:</strong></p>
                 <button className="btn btn-outline-success" onClick={() => navigate('/appointments')}>
                     View My Appointments
                 </button>

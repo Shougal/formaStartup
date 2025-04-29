@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {registerCustomer, registerProvider} from '../api/auth';
+import {registerProvider} from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
@@ -143,7 +143,7 @@ function RegisterProvider() {
                  required/>
 
           <input type="text" name="location" placeholder="Location" onChange={handleChange} required/>
-          <label htmlFor="specialty"> What's your specialty?</label>
+          <label htmlFor="specialty"> What&apos;s your specialty?</label>
           <select name="specialty" id="specialty" onChange={handleChange} required>
             <option value="NailStylist">Nail Stylist</option>
             <option value="Barber"> Barber/HairStylist</option>

@@ -91,7 +91,7 @@ const WeekAvailabilityForm = () => {
       <main>
         <section className={"hero"}>
           <div className="container mt-4">
-            <h2>This Week's Availability</h2>
+            <h2>This Week&apos;s Availability</h2>
             {weekDays.map((day, index) => {
               const formattedDate = day.format('YYYY-MM-DD');
               const displayDate = day.format('dddd, MMMM Do');
