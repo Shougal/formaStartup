@@ -57,3 +57,8 @@ media/
 .env.local
 workspace/
 .env
+.idea/workspace.xml
+# Ignore all of .idea except for shared settings
+!.idea/.name
+!.idea/inspectionProfiles
+!.idea/codeStyles
