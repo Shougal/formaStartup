@@ -31,9 +31,7 @@ AUTH_USER_MODEL = 'api.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-#TODO: Ensure security key is kept secret and is not exposed in codebase
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-0ps1ba&to2jzzyvp@6&fb9pqs1uk14pob^7i4&)5=6y@%n!s)#'
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", secrets.token_urlsafe(64))
 
 #TODO: Turn off debug upon production
@@ -45,11 +43,7 @@ DEBUG = os.environ.get("ENVIRONMENT") != "production"
 
 #TODO: allow specific hosts after you finish the project:
 
-# ALLOWED_HOSTS = ["*"] # Allows any host to host this django project
-# if os.environ.get("ENVIRONMENT") == "production":
-#     ALLOWED_HOSTS = ["forma-app.herokuapp.com"]
-# else:
-#     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
 if os.environ.get("ENVIRONMENT") == "production":
     ALLOWED_HOSTS = ["forma-app-b1081cbc4d9c.herokuapp.com", ".herokuapp.com"]
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -176,13 +170,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-#TODO: for production, you might want to switch to a more robust database system like PostgreSQL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
 if "DYNO" in os.environ:
     DATABASES = {
         "default": dj_database_url.config(conn_max_age=600, ssl_require=True)
@@ -195,7 +183,7 @@ else:
         }
     }
 
-#TODO: Configure email settings
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -234,10 +222,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-# STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'frontend' / 'build' / 'static']
 
@@ -250,10 +235,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-#TODO: Allow only a specific origin after you finish the program
-#Typically you should allow a specific origin but for different deployment I will be doing now,
-# I will be allowing all for the moment to not get error
-# CORS_ALLOW_ALL_ORIGINS = True
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",   # React dev server default
     "http://127.0.0.1:3000",
