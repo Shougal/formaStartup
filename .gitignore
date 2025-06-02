@@ -10,6 +10,9 @@ __pycache__/
 db.sqlite3
 *.log
 
+# Environment variables
+.env
+
 ## Migrations (optional, but should keep initial migrations)
 #*/migrations/*.py
 #!*/migrations/__init__.py
