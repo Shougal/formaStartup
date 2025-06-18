@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 # BaseUser is now abstract (does NOT create a table)
 class BaseUser(AbstractUser):
@@ -22,7 +23,8 @@ class User(BaseUser):
     under their email"""
 def upload_location(instance, filename):
     fileextension = filename.split('.')[-1]
-    filename = f'profile.{fileextension}'
+    # added a UUID so each new image gets a unique filename
+    filename = f'{uuid.uuid4().hex}.{fileextension}'
     return f'provider_images/{instance.email.lower()}/{filename}'
 # Provider and Customer now extend User (not BaseUser)
 class Provider(User):
@@ -43,6 +45,9 @@ class Provider(User):
         try:
             old = Provider.objects.get(pk=self.pk)
             if old.img and old.img!= self.img:
+                old.img.delete(save=False)
+            elif old.img and self.img and old.img.read() != self.img.read():
+                # fallback if name is same but content changed
                 old.img.delete(save=False)
         except Provider.DoesNotExist:
             pass
