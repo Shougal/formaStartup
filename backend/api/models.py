@@ -18,6 +18,12 @@ class BaseUser(AbstractUser):
 class User(BaseUser):
     pass  # This is needed to create a real table in the database
 
+""" A function to upload profile images of a user under provider_images , then 
+    under their email"""
+def upload_location(instance, filename):
+    fileextension = filename.split('.')[-1]
+    filename = f'profile.{fileextension}'
+    return f'provider_images/{instance.email.lower()}/{filename}'
 # Provider and Customer now extend User (not BaseUser)
 class Provider(User):
     #TODO: make specialty a drop down menu
@@ -31,8 +37,16 @@ class Provider(User):
     portfolio_link = models.URLField(max_length=200, blank=False)
     calendly_link = models.URLField(max_length=200, blank=False)
     #TODO: Configure images later on
-    img = models.ImageField(upload_to='provider_images/',  null=True, blank=True)
+    img = models.ImageField(upload_to= upload_location,  null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        try:
+            old = Provider.objects.get(pk=self.pk)
+            if old.img and old.img!= self.img:
+                old.img.delete(save=False)
+        except Provider.DoesNotExist:
+            pass
+        super().save(*args, **kwargs)
     class Meta:
         verbose_name = "Provider"
         verbose_name_plural = "Providers"
