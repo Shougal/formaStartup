@@ -12,6 +12,10 @@ from dotenv import load_dotenv
 import os
 import secrets
 import dj_database_url
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 load_dotenv() # This loads an environment file so we can use that to have credentials for the database
 
@@ -27,16 +31,9 @@ AUTH_USER_MODEL = 'api.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# The following tells django to store all uploaded media files (like images) in Amazon S3, not on the local file system.
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", secrets.token_urlsafe(64))
-AWS_ACCESS_KEY_ID= os.environ.get("AWS_ACCESS_KEY_ID", secrets.token_urlsafe(64))
-AWS_SECRET_ACCESS_KEY= os.environ.get("AWS_SECRET_ACCESS_KEY", secrets.token_urlsafe(64))
-AWS_STORAGE_BUCKET_NAME= os.environ.get("AWS_STORAGE_BUCKET_NAME", secrets.token_urlsafe(64))
-AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
-AWS_S3_FILE_OVERWRITE = False  # Prevent overwriting files with the same name
-AWS_DEFAULT_ACL = None
+
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 DEBUG = os.environ.get("ENVIRONMENT") != "production"
 
@@ -128,8 +125,35 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
-    'storages'
+    'storages',
 ]
+# The following tells django to store all uploaded media files (like images) in Amazon S3, not on the local file system.
+# This is the new storages dict for django > 4.2
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("AWS_ACCESS_KEY_ID"),
+            "secret_key": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME"),
+            "region_name": os.environ.get("AWS_S3_REGION_NAME"),
+            "file_overwrite": True,
+            "default_acl": None,
+        },
+    },
+    'staticfiles': {
+        'BACKEND': "storages.backends.s3boto3.S3Boto3Storage",
+        'OPTIONS': {
+            "access_key": os.environ.get("AWS_ACCESS_KEY_ID"),
+            "secret_key": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME"),
+            "region_name": os.environ.get("AWS_S3_REGION_NAME"),
+            "file_overwrite": False,
+            "default_acl": None,
+        },
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -226,6 +250,9 @@ STATICFILES_DIRS = [BASE_DIR / 'frontend' / 'build' / 'static']
 
 # STATICFILES_DIRS = [BASE_DIR / 'static']  # BASE_DIR refers to outer backend/
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+#Media url path
+MEDIA_URL = f"https://{os.environ.get('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/"
 
 # Default primary key field type
 
