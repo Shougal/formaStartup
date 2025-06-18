@@ -12,9 +12,9 @@ from dotenv import load_dotenv
 import os
 import secrets
 import dj_database_url
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+#
+# logging.basicConfig(level=logging.DEBUG)
 
 
 load_dotenv() # This loads an environment file so we can use that to have credentials for the database
