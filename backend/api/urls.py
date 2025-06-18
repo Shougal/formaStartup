@@ -1,6 +1,5 @@
 from django.urls import path
-from . import views
-from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView, TestProtectedView, ApprovedProvidersView, ChangePasswordView, AvailabilityList, AvailabilityDetail, ProviderAvailabilityView, BookAppointmentView, CustomerAppointmentsList, ProviderAppointmentsList
+from .views import RegisterProviderView, RegisterCustomerView, UserLoginView, UserLogoutView, TestProtectedView, ApprovedProvidersView, ChangePasswordView, AvailabilityList, AvailabilityDetail, ProviderAvailabilityView, BookAppointmentView, CustomerAppointmentsList, ProviderAppointmentsList, UpdateProviderView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -25,5 +24,6 @@ urlpatterns = [
     path('appointments/book/', BookAppointmentView.as_view(), name='book-appointment'),
     path('appointments/customer/', CustomerAppointmentsList.as_view(), name='customer-appointments'),
     path('appointments/provider/', ProviderAppointmentsList.as_view(), name='provider-appointments'),
+    path('update/provider/<int:pk>/', UpdateProviderView.as_view(), name='update-provider'),
 
 ]
