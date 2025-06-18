@@ -16,7 +16,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         #TODO: Do not include is_approved to fields, should default to false
         fields = ['id', 'username', 'email', 'location', 'specialty', 'availability', 'prices', 'is_approved', 'password','first_name', 'last_name', 'theme','portfolio_link', 'calendly_link', 'img' ]
         extra_kwargs = {'password': {'write_only': True}}
-        # 'is_approved': {'default': False, 'read_only': True}
+
 
     def validate_email(self, value):
         #Used __iexact which is a field lookup in Django that performs a case-insensitive exact match, which means it will find an email regardless of its case.
@@ -42,6 +42,21 @@ class ProviderSerializer(serializers.ModelSerializer):
         provider.is_provider = True
         provider.save()
         return provider
+
+    """ Method for update requests"""
+    def update(self, instance, validated_data):
+        # Remove the password field since I created a separate view for password updates
+        validated_data.pop('password', None)
+
+        if 'img' in validated_data:
+            instance.img = validated_data['img']
+
+        # Update fields one by one
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()  # This calls the model's save method
+        return instance
 
 
 class CustomerSerializer(serializers.ModelSerializer):
