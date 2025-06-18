@@ -12,6 +12,8 @@ import shutil
 from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 from django.core.files.storage import default_storage
+from PIL import Image
+from io import BytesIO
 
 
 # # Create your tests here.
@@ -561,3 +563,65 @@ class ProviderImageTest(TestCase):
         # Old image should be gone
         self.assertFalse(default_storage.exists(old_image_name))
         self.assertTrue(default_storage.exists(provider.img.name))
+
+
+"""         Image generation helper method      """
+
+def generate_test_image(name='test.jpg', size=(100, 100), color=(255, 0, 0)):
+    img_file = BytesIO()
+    image = Image.new("RGB", size, color)
+    image.save(img_file, 'JPEG')
+    img_file.seek(0)
+    return SimpleUploadedFile(name, img_file.read(), content_type='image/jpeg')
+
+
+"""         Test image uploads in UpdateProviderView    """
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class UpdateProviderViewTest(TestCase):
+
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.image1 = generate_test_image('img1.jpg')
+        self.image2 = generate_test_image('img2.jpg')
+
+        self.provider = Provider.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123',
+            specialty='Photography',
+            availability={},
+            prices={},
+            is_provider=True,
+            portfolio_link='http://example.com',
+            calendly_link='http://calendly.com/example'
+        )
+
+        self.provider.img.save('img1.jpg', self.image1)
+        self.provider.save()
+
+        self.client.force_authenticate(user=self.provider)
+
+    def tearDown(self):
+        if os.path.exists(TEMP_MEDIA_ROOT):
+            shutil.rmtree(TEMP_MEDIA_ROOT)
+
+    def test_update_provider_image(self):
+        old_image_name = self.provider.img.name
+
+
+        url = reverse('update-provider', kwargs={'pk': self.provider.pk})
+        # print(url)
+
+        response = self.client.patch(url, {'img': self.image2}, format='multipart')
+        # print("RESPONSE STATUS:", response.status_code)
+        # print("RESPONSE DATA:", response.data)
+        self.assertEqual(response.status_code, 200)
+
+        self.provider.refresh_from_db()
+        self.assertNotEqual(self.provider.img.name, old_image_name)
+        self.assertTrue(default_storage.exists(self.provider.img.name))
+        self.assertFalse(default_storage.exists(old_image_name))
