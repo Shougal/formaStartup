@@ -1,41 +1,39 @@
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-# from .forms import ProviderSignUpForm, CustomerSignUpForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from .models import User, Provider, Customer, Availability, CustomerAppointment
-from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer, CustomerAppointmentSerializer
+from .serializers import ProviderSerializer, CustomerSerializer, LogoutSerializer, AvailabilitySerializer, CustomerAppointmentSerializer
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_http_methods
 from rest_framework_simplejwt.tokens import  TokenError
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 """         Register Provider View with serializer and email&username validation    """
-# @method_decorator(csrf_exempt, name='dispatch')
 class RegisterProviderView(APIView):
     """
     Handles provider registration.
     """
 
+    parser_classes = [MultiPartParser, FormParser]
     queryset = Provider.objects.all()  #Set the queryset for providers
     serializer_class = ProviderSerializer
     permission_classes = [AllowAny]
     authentication_classes = []
 
+
     @csrf_exempt
     def post(self, request, *args, **kwargs):
         email = request.data.get('email').lower() #To ensure case-insensitivity
         username = request.data.get('username').lower()
+        print("Image file:", request.FILES.get('img'))
+        print("FILES:", request.FILES)
 
         # Check if email or username already exists
         #Made a lower_email instance for runtime only(not stored in db) and set to equal lower email field in db
@@ -52,7 +50,6 @@ class RegisterProviderView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 """         Customer registration view with serializer and email&username validation"""
-# @method_decorator(csrf_exempt, name='dispatch')
 class RegisterCustomerView(APIView):
     """
     Handles customer registration.
@@ -310,3 +307,19 @@ class ProviderAppointmentsList(generics.ListAPIView):
 
     def get_queryset(self):
         return CustomerAppointment.objects.filter(provider=self.request.user)
+
+class UpdateProviderView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    "Since I want partial updates based on fields provided, I will "
+    "create the patch method instead of the update method"
+    def patch(self, request, pk, *args, **kwargs):
+        provider = get_object_or_404(Provider, pk=pk, is_provider=True)
+        # MAde sure to pass the provider instance in order for my serializer to
+        # call the update method instead of the create method
+        serializer = ProviderSerializer(provider, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
