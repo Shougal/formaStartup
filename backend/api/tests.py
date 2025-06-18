@@ -1,16 +1,17 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from .models import Provider, Customer, User, Availability, CustomerAppointment
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, ProviderSerializer, CustomerSerializer
 from rest_framework.test import APITestCase
 from rest_framework import status  # Import status module for HTTP response codes
-from rest_framework_simplejwt.tokens import RefreshToken  # Import RefreshToken for token operations
-from django.urls import path, include
-from .views import TestProtectedView
 from rest_framework.test import APIClient
 from datetime import date, time
-
+import tempfile
+import shutil
+from django.core.files.uploadedfile import SimpleUploadedFile
+import os
+from django.core.files.storage import default_storage
 
 
 # # Create your tests here.
@@ -514,3 +515,49 @@ class AppointmentBookingTests(TestCase):
         # Confirm provider and customer relations
         self.assertIn(appt, self.customer.customer_appointments.all())
         self.assertIn(appt, self.provider.provider_appointments.all())
+
+"""         Test image uploads in provider model   """
+# Temporary directory for media files during testing
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class ProviderImageTest(TestCase):
+
+    def setUp(self):
+        self.image1 = SimpleUploadedFile(
+            name='test1.jpg',
+            content=b'some image content',
+            content_type='image/jpeg'
+        )
+        self.image2 = SimpleUploadedFile(
+            name='test2.jpg',
+            content=b'different image content',
+            content_type='image/jpeg'
+        )
+
+    def tearDown(self):
+        # Clean up the media folder after tests
+        shutil.rmtree(TEMP_MEDIA_ROOT)
+
+    def test_image_replacement_deletes_old_image(self):
+        provider = Provider.objects.create(
+            username='galaxyhunter',
+            email='galaxy@example.com',
+            specialty='Astrophotography',
+            availability={},
+            prices={},
+            portfolio_link='http://example.com/portfolio',
+            calendly_link='http://example.com/schedule',
+            img=self.image1
+        )
+
+        old_image_name = provider.img.name  # e.g. 'provider_images/galaxy@example.com/profile.jpg'
+        self.assertTrue(default_storage.exists(old_image_name))
+
+        # Replace image
+        provider.img = self.image2
+        provider.save()
+
+        # Old image should be gone
+        self.assertFalse(default_storage.exists(old_image_name))
+        self.assertTrue(default_storage.exists(provider.img.name))
