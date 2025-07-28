@@ -1,5 +1,4 @@
 # Forma
-# Code is fully owned by repository owner - Shoug Alharbi
 
 🚀 *From Students, For Students* – A UVA-exclusive service platform
 
@@ -7,12 +6,6 @@
 
 ---
 
-> 📢 **Public Notice**  
-> This repository is public for demonstration and educational purposes.  
-> 🧑‍💻 All coding and contributions are restricted to the repository owner.  
-> 🔐 Pull requests from outside contributors will not be accepted.
-
----
 
 ## 🌐 How to Run Locally
 
@@ -118,12 +111,5 @@ As the sole developer of Forma, a service marketplace for UVA students, I adopte
 **Challenges:**
 - Initially missed defining `lint` script in `package.json`, which caused pipeline errors.
 
-**Suggestions:**
-- Teams should add CI early in development, even for solo projects.
 
----
-
-### Instructor-Specific Comments
-
-While this report is tailored for my startup, Forma, rather than a class project, the practices align with industry DevOps standards. GitHub Actions, Heroku, Django, and React form a powerful stack for rapid, secure development with automation built-in. I highly recommend future solo developers to enforce CI/linting workflows early and leverage protected branches even when working alone.
 
